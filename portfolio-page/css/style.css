@@ -1,0 +1,102 @@
+#header {
+  background-color: #2c2c2c;
+  color: #d1d1d1;
+  position: fixed;
+  width: 105%;
+  height: auto;
+  z-index: 200;
+}
+
+#about {
+  padding: 75px;
+  background-color: #d1d1d1;
+  color: #4f4f4f;
+  margin-left: 40px;
+  margin-right: 40px;
+  border-radius: 10px;
+}
+
+#portfolio {
+  padding: 75px;
+  height: 600px;
+  background-color: #eeeeee;
+  color: #5f5f5f;
+  margin-left: 40px;
+  margin-right: 40px;
+  border-radius: 10px;
+}
+
+#contact {
+  padding: 75px;
+  background-color: #d1d1d1;
+  color: #4f4f4f;
+  margin-left: 40px;
+  margin-right: 40px;
+  border-radius: 10px;
+}
+
+#link {
+  background-color: #2c2c2c;
+  color: #d1d1d1;
+  width: 105%;
+  height: auto;
+}
+
+a {
+  color: #d1d1d1;
+}
+
+a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+nav>ul {
+  display: inline;
+}
+
+#menu {
+  display: inline;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+#main-menu .nav-bar li {
+  display: inline;
+  padding: 0 115px;
+}
+
+input[type=text],
+select {
+  width: 100%;
+  padding: 15px 25px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin: 35px 50px 10px -40px;
+}
+
+button {
+  margin: 35px 50px 0px -40px;
+  padding: 10px 20px;
+}
+
+footer {
+  background-color: #121212;
+  color: #efefef;
+  width: 105%;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  width: auto\9;
+  /* ie8 */
+  border-width: 10px;
+  border-style: solid;
+  border-color: white;
+}
