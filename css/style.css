@@ -3,7 +3,7 @@
   color: #d1d1d1;
   position: fixed;
   width: 105%;
-  height: auto;
+  height: 12%;
   z-index: 200;
 }
 
@@ -11,8 +11,8 @@
   padding: 75px;
   background-color: #d1d1d1;
   color: #4f4f4f;
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 8%;
+  margin-right: 8%;
   border-radius: 10px;
 }
 
@@ -21,8 +21,8 @@
   height: 600px;
   background-color: #eeeeee;
   color: #5f5f5f;
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 8%;
+  margin-right: 8%;
   border-radius: 10px;
 }
 
@@ -30,8 +30,8 @@
   padding: 75px;
   background-color: #d1d1d1;
   color: #4f4f4f;
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 8%;
+  margin-right: 8%;
   border-radius: 10px;
 }
 
@@ -43,6 +43,9 @@
 }
 
 a {
+  color: #d1d1d1;
+}
+a : visited {
   color: #d1d1d1;
 }
 
@@ -93,8 +96,8 @@ footer {
 
 img {
   max-width: 100%;
-  height: auto;
-  width: auto\9;
+  height: 100%;
+  width: auto\2;
   /* ie8 */
   border-width: 10px;
   border-style: solid;
