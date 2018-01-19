@@ -1,12 +1,16 @@
 ---
 layout: null
 title: Tu Nguyen
-description: Landing page
+description: My Online CV
 sitemap:
     priority: 1.0
     lastmod: 2017-11-02
     changefreq: weekly
 ---
+<!DOCTYPE HTML>
+<!--
+La
+-->
 <html>
 	<head>
     {% include head.html %}
@@ -21,9 +25,9 @@ sitemap:
 				<!-- Intro -->
 					<div id="intro">
             <h1>{{site.title}}</h1>
-            <p>I am an undergraduate student majoring in Applied Mathematics and Informatics.<br /> 
-            I enjoy Discrete Mathematics and Machine Learning.<br /> 
-            Welcome to by personal page!</p>
+						<h2 style="font-size:5rem">&#x2b1b;</h2>
+						<p>Welcome to my personal page &#x1f389;<br />
+						where I write about mathematics and machine learning &#x1f916;</p>
 						<ul class="actions">
 							<li><a href="#header" class="button icon solo fa-arrow-down scrolly">Continue</a></li>
 						</ul>
@@ -52,12 +56,12 @@ sitemap:
 						<!-- Featured Post -->
 							<article class="post featured">
 								<header class="major">
-									<h2><a href="#">"There is only levels of misunderstanding"</a></h2>
+									<h2><a href="#">Tu Nguyen</a></h2>
 									<p>With only a few edits, you can have a stunningly beautiful website <br />
                     nearly out of the box. Of course... you can always take it further <br />
                     and make it something even more amazing!</p>
 								</header>
-								<a href="#" class="image main"><img src="{{ "/images/pic01.jpg" | absolute_url }}" alt="" /></a>
+								<a href="#" class="image main"><img src="{{ "/images/hn_vm.jpg" | absolute_url }}" alt="" /></a>
                 <p>Regardless of your website's function, the homepage is what brings the user in.
                   If it's anything short of intriguing, captivating, or just plain cool, you're out of luck and you might deter some visitors.</p>
                 <p>Your homepage must clearly describe what your site is about.
@@ -69,32 +73,6 @@ sitemap:
 
 							</article>
 
-						<!-- Posts -->
-							<section class="posts">
-                {% for post in site.posts limit:3 %}
-                {% assign mod3 = forloop.index | modulo: 3 %}
-  								<article>
-  									<header>
-  										<span class="date">{{ post.date | date_to_string }}</span>
-  										<h2><a href="{{ post.url | absolute_url }}">{{ post.title }}</h2>
-  									</header>
-  									<a href="{{ post.url | absolute_url }}" class="image fit"><img src="{{ post.image | absolute_url }}" alt="" /></a>
-  									<p>{{ post.excerpt }}</p>
-  									<ul class="actions">
-  										<li><a href="{{ post.url | absolute_url }}" class="button">Read More</a></li>
-  									</ul>
-  								</article>
-                  {% if mod3 == 0 %}
-                  <article>
-  									<header>
-  										<h2><a href="#">Sponsored</h2>
-  									</header>
-
-  								</article>
-                  {% endif %}
-                {% endfor %}
-
-							</section>
 
 						<!-- Footer -->
 							<footer>

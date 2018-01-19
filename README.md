@@ -1,3 +1,3 @@
-## My personal blog
-This is my personal blog, created with jekyll and MASSIVELY theme.
+## Personal blog
 
+This is the repository for my personal blog built with jekyll and Massively theme.

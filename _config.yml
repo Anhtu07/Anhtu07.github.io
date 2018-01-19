@@ -1,10 +1,10 @@
 # Site
-title:              Massively
-bio:                'Jekyll version of the Massively theme by HTML5UP'
-description:        "Jekyll version of the Massively theme by HTML5UP"
+title:              TuNA
+bio:                'I learn mathematics and build things'
+description:        "Tu Nguyen personal blog"
 locale:             en_US
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site
+url: "https://anhtu07.github.io/" # the base hostname & protocol for your site
 
 defaults:
 - scope:
@@ -38,12 +38,12 @@ analytics-id:       "default"
 twitter:            default
 facebook:           default
 instagram:          default
-github:             https://github.com/Anhtu07
+github:             github.com/anhtu07
 
 # personal
 location:           Hanoi, Vietnam
-phone:              098-6955-931
-email:              tu.nguyenanh.96@gmail.com
+phone:              098-2955-931
+email:              tu.nguyenanh.91@gmail.com
 
 # Gems
 gems:
@@ -57,7 +57,7 @@ paginate: 6
 paginate_path: "/blog/page:num/"
 
 jekyll-mentions:
-    base_url: https://github.com/Anhtu07
+    base_url: https://github.com
 
 # Exclude list
 exclude: [README.md, Gemfile, Gemfile.lock, node_modules, gulpfile.js, package.json, _site, src, vendor, CNAME, LICENSE, Rakefile, old]
