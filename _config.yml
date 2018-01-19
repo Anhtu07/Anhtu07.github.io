@@ -38,12 +38,12 @@ analytics-id:       "default"
 twitter:            default
 facebook:           default
 instagram:          default
-github:             default
+github:             https://github.com/Anhtu07
 
 # personal
 location:           Hanoi, Vietnam
-phone:              0986-955-931
-email:              tu(dot)nguyenanh(dot)96(at)gmail(dot)com
+phone:              098-6955-931
+email:              tu.nguyenanh.96@gmail.com
 
 # Gems
 gems:
@@ -57,7 +57,7 @@ paginate: 6
 paginate_path: "/blog/page:num/"
 
 jekyll-mentions:
-    base_url: https://github.com
+    base_url: https://github.com/Anhtu07
 
 # Exclude list
 exclude: [README.md, Gemfile, Gemfile.lock, node_modules, gulpfile.js, package.json, _site, src, vendor, CNAME, LICENSE, Rakefile, old]
