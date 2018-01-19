@@ -1,10 +1,10 @@
 # Site
-title:              Tu Nguyen
-bio:                'An intersection between Graph Theory and Computer Science'
-description:        "A blog about things I learn"
+title:              Massively
+bio:                'Jekyll version of the Massively theme by HTML5UP'
+description:        "Jekyll version of the Massively theme by HTML5UP"
 locale:             en_US
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://anhtu07.github.io" # the base hostname & protocol for your site
+url: "" # the base hostname & protocol for your site
 
 defaults:
 - scope:
@@ -41,9 +41,15 @@ instagram:          default
 github:             https://github.com/Anhtu07
 
 # personal
+<<<<<<< HEAD
 location:           Hanoi, Vietnam
 phone:              098-6955-931
 email:              tu.nguyenanh.96@gmail.com
+=======
+location:           Los Angeles, CA
+phone:              310-318-5555
+email:              info@default.com
+>>>>>>> parent of 1e988b4... add site config
 
 # Gems
 gems:
