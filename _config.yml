@@ -41,15 +41,9 @@ instagram:          default
 github:             https://github.com/Anhtu07
 
 # personal
-<<<<<<< HEAD
 location:           Hanoi, Vietnam
 phone:              098-6955-931
 email:              tu.nguyenanh.96@gmail.com
-=======
-location:           Los Angeles, CA
-phone:              310-318-5555
-email:              info@default.com
->>>>>>> parent of 1e988b4... add site config
 
 # Gems
 gems:
