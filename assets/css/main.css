@@ -9,6 +9,25 @@
 
 /* Reset */
 
+#cv * { margin: 0; padding: 0; }
+#cv body { font: 16px Helvetica, Sans-Serif; line-height: 24px; background: url(images/noise.jpg); }
+#cv .clear { clear: both; }
+#cv #page-wrap { width: 800px; margin: 40px auto 60px; }
+#cv #pic { float: right; margin: -30px 0 0 0; }
+#cv h1 { margin: 0 0 16px 0; padding: 0 0 16px 0; font-size: 42px; font-weight: bold; letter-spacing: -2px; border-bottom: 1px solid #999; }
+#cv h2 { font-size: 20px; margin: 0 0 6px 0; position: relative; }
+#cv h2 span { position: absolute; bottom: 0; right: 0; font-style: italic; font-family: Georgia, Serif; font-size: 16px; color: #999; font-weight: normal; }
+#cv p { margin: 0 0 16px 0; }
+#cv a { color: #999; text-decoration: none; border-bottom: 1px dotted #999; }
+#cv a:hover { border-bottom-style: solid; color: black; }
+#cv ul { margin: 0 0 32px 17px; }
+#cv #objective { width: 500px; float: left; }
+#cv #objective p { font-family: Georgia, Serif; font-style: italic; color: #666; }
+#cv dt { font-style: italic; font-weight: bold; font-size: 18px; text-align: right; padding: 0 26px 0 0; width: 150px; float: left; height: 100px; border-right: 1px solid #999;  }
+#cv dd { width: 600px; float: right; }
+#cv dd.clear { float: none; margin: 0; height: 15px; }
+
+
 	html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
 		margin: 0;
 		padding: 0;
