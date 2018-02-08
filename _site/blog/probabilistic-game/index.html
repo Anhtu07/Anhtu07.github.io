@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-<title>Welcome to Massively: The Jekyll Theme!</title>
+<title>Solving a Probabilistic Problem</title>
 <meta name="description" content="">
 
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-touch-icon.png">
@@ -21,6 +21,19 @@
 <link rel="shortcut icon" href="/assets/icon/favicon.ico">
 <meta name="msapplication-config" content="/assets/icon/browserconfig.xml">
 <meta name="theme-color" content="#ffffff">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      processEscape: true
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
 
 <!-- CSS -->
 <link rel="stylesheet" href="/assets/css/main.css">
@@ -59,33 +72,99 @@
 				<div id="main">
           <section class="post">
     				<header class="major">
-      				<span class="date">31 Oct 2017</span>
-      				<h1>Welcome to Massively: The Jekyll Theme!</h1>
-      				<p>Huge thanks to HTML5 UP for making this awesome template! Let's see what it can do</p>
+      				<span class="date">29 Jan 2018</span>
+      				<h1>Solving a Probabilistic Problem</h1>
+      				<p>This article presents the algebraic proof and method for solving a two-gamers problem</p>
       			</header>
-      			<div class="image main"><img src="/images/pic02.jpg" alt=""></div>
+      			<div class="image main"><img src="/images/prob_model.png" alt=""></div>
       			<p></p>
-<h2 id="how-to-use-this-theme">How to Use This Theme</h2>
-<p>Just go ahead and read up on <a href="https://jekyllrb.com/">how to install Jekyll</a>. It’s not too hard I promise!</p>
+<h2 id="the-problem">The Problem</h2>
 
-<p>Download this repository <a href="https://github.com/iwiedenm/jekyll-theme-massively">here</a> and save it to any folder you want.</p>
+<p>Suppose there are two players A and B. A owns $a$ dollars, while B owns $b$ dollars ($a, b \in \mathbb{N}$). Each turn of play, A has $p$ chance of winning and $q = 1-p$ chance of losing. if A win, he gets a dollar; if he loses, he lose one dollar. The game end when either of players is out of money. The question is what probability A will win (A gets $a+b$ dollar) or A will lose (A has 0 dollars).</p>
 
-<p>Open a terminal window or a command line and <code class="highlighter-rouge">cd</code> to that location.</p>
+<h2 id="the-model">The Model</h2>
 
-<p>Then enter: <code class="highlighter-rouge">bundle exec jekyll serve</code>. You can now access your new Jekyll site from <a href="http://127.0.0.1:4000/">http://127.0.0.1:4000/</a>. Have fun exploring your new site!</p>
+<p>This problem can be easily put into a mathematical model as follows. Let ${X_n}%_$ be a random variable sequence such that $X_i$ is the money that A owns at $i^{th}$ turn of the game. We can easily obtain the transition matrix $P$:</p>
 
-<h2 id="features">Features</h2>
-<h3 id="auto-generating-sitemap">Auto-Generating Sitemap</h3>
-<p>The sitemap is auto generated! Just simply change the front matter of each site. It looks like so…</p>
-<div class="highlighter-rouge">
-<pre class="highlight"><code>sitemap:
-    priority: 0.7
-    lastmod: 2017-11-02
-    changefreq: weekly
-</code></pre>
-</div>
-<h3 id="formspring-integration">Formspring integration</h3>
-<p>The contact form below each page on the footer actually collects information! Just change your email address in the <code class="highlighter-rouge">_config.yml</code> file!</p>
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{bmatrix} 
+1 & 0 & 0 & \dots & 0 \\ 
+q & 0 & p & \dots & 0 \\
+0 & q & 0 & \dots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & \dots & 1 
+\end{bmatrix} %]]></script>
+
+<p>$X_i$ can be a element of the set $I = $ {$1,2,3,.., a+b$} and $p_{ij}$ is the probability that state $X_i$ will go to state $X_j$.</p>
+
+<h2 id="the-notation">The Notation</h2>
+<p>We only need to find the probability that starting $a$ dollars, A will end up at having $a+b$ dollars after some turn (the other case is similiar). Let H equal inf {$n \geq 0 | X_n = a+b$}, this definition also means that $H$ is a random variable .Let define $h_i$ as follow $ h_i = P(H &lt; \infty | X_0 = i) $</p>
+
+<h2 id="the-theorem">The Theorem</h2>
+<p>The set of $h_i$ with $i = \overline{1,a+b}$ is the non-negative smallest solution of the following system</p>
+
+<script type="math/tex; mode=display">\left\{
+\begin{array}{l}
+h_i = 1 \ \ \ \ \ \ \ \ \ \ \ \ \ \ when \ i = a+b \\
+h_i = \sum_{j \in I} p_{ij} h_j \ when \ i \neq a+b
+\end{array}
+\right.
+\ \ \ \ \ \ \ (\ast)</script>
+
+<p>The smallest solution here means that if $x$ is also non-negetive solution of the system $*$ then $x_i \geq h_i \forall i \in I$</p>
+
+<h3 id="proof">Proof</h3>
+<p>We first prove that $h = (h_i)_{i \in I}$ is a solution of *.
+If $i = a+b$ then</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+h_i = P(H < \infty | X_0 = a+b) = P(0 < \infty | x_0 = a+b) = 1 %]]></script>
+
+<p>If $i \neq a+b$ then</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+h_i = P(H < \infty | X_0 = i) = \sum_{j \in I} P(H < \infty | X_1 = j) \cdot P(X_i = j | X_0 = i) %]]></script>
+
+<p>Since <script type="math/tex">% <![CDATA[
+P(H < \infty \mid X_1 = j) = P(H < \infty \mid X_0 = j) = h_j %]]></script>. We conclude that</p>
+
+<script type="math/tex; mode=display">h_i = \sum_{j \in I} p_{ij} h_j</script>
+
+<p>To this point, we have proven that <script type="math/tex">h = (h_i)_{i \in I}</script> is a solution of system $\ast$. Now we will prove that $h$ is the smallest solution of $\ast$. Suppose <script type="math/tex">x = (x_i)_{i \in I}</script> is a non-negative solution of $\ast$. Clearly, $x_{a+b} = 1$. With $i \neq a+b$, we have</p>
+
+<script type="math/tex; mode=display">x_i = \sum_{j \in I} p_{ij}x_j =  p_{i, a+b} + \sum_{j \neq a+b} p_{ij}x_j \\
+= p_{i, a+b} + \sum_{j \neq a+b} p_{ij} (p_{j, a+b} + \sum_{r \neq a+b } p_{jr}x_r) \\
+= P_i(X_1 = a+b) + P(X_1 \neq a+b, X_2 = a+b) + \sum_{j \neq a+b} \sum_{r \neq a+b} p_{ij}p_{jr}x_r</script>
+
+<p>If we continue to expand $x_r$ as above, we can derive that</p>
+
+<script type="math/tex; mode=display">P_i(X_1 = a+b) + ... + P_i(X_1 \neq a+b, X_2 \neq a+b, ... X_n = a+b) + \sum_{j_1 \neq a+b} ... \sum_{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn} \\
+= P_i(H \le n) + \sum_{j_1 \neq a+b} ... \sum{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn}</script>
+
+<p>The “bunch of sum” in the above formula is used for nothing but it is greater than $0$. <script type="math/tex">x_i > P_i(H \le n) \forall n</script>. So <script type="math/tex">x_i \geq h_i \forall i \in I</script>.</p>
+
+<p>In conclusion, $h$ is is the non-negative smallest solution of the system *</p>
+
+<h3 id="the-formula">The Formula</h3>
+
+<p>Back to our original problem, to calculate the chance of A wins starting from $a$ dollars is to find $h_a$ in the above system. By the above theorem, we need to solve the following system</p>
+
+<script type="math/tex; mode=display">\left\{
+\begin{array}{l}
+h_0 = 0 \\
+h_{a+b} = 1 \\
+h_i = q h_{i-1} + p h_{i + 1} \forall i = \overline{1, a+b-1}
+\end{array}
+\right.</script>
+
+<p>we rewrite our recursive formula as $h_{i+1} = \frac{1}{p} h_i - \frac{q}{p} h_{i+1}$. From this we can derive our characteristic polynomial</p>
+
+<script type="math/tex; mode=display">x^2 - \frac{1}{p} x + \frac{q}{p}</script>
+
+<p>We have two solution of the characteristic polynomial is</p>
+
+<script type="math/tex; mode=display">x_1 = \frac{\frac{1}{p} + \sqrt{\frac{1}{p^2} - 4\frac{q}{p}}}{2} = \frac{\frac{1}{p} + \sqrt{\frac{1}{p^2} - 4\frac{1}{p} + 4}}{2} = \frac{\frac{1}{p} + \left\lvert\frac{q}{p}\right\lvert}{2}</script>
+
 
       		</section>
 
@@ -98,8 +177,8 @@
                */
 
               var disqus_config = function () {
-                  this.page.url = '/blog/welcome-to-massively-the-jekyll-theme/';  /*Replace PAGE_URL with your page's canonical URL variable*/
-                  this.page.identifier = '/blog/welcome-to-massively-the-jekyll-theme/'; /*Replace PAGE_IDENTIFIER with your page's unique identifier variable*/
+                  this.page.url = '/blog/probabilistic-game/';  /*Replace PAGE_URL with your page's canonical URL variable*/
+                  this.page.identifier = '/blog/probabilistic-game/'; /*Replace PAGE_IDENTIFIER with your page's unique identifier variable*/
               };
 
               (function() {  /* dont endit below this line */
@@ -192,6 +271,7 @@
 <script src="/assets/js/skel.min.js"></script>
 <script src="/assets/js/util.js"></script>
 <script src="/assets/js/main.js"></script>
+<script src="/assets/js/MathJax.js"></script>
 
 			<script async src="https://www.googletagmanager.com/gtag/js?id=default"></script>
 <script>

@@ -2,9 +2,9 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
     <url>
-      <loc>https://anhtu07.github.io//blog/welcome-to-massively-the-jekyll-theme/</loc>
+      <loc>https://anhtu07.github.io/blog/probabilistic-game/</loc>
       
-        <lastmod>2017-10-31T00:00:00+07:00</lastmod>
+        <lastmod>2018-01-29T00:00:00+07:00</lastmod>
       
       <changefreq>weekly</changefreq>
       <priority>0.7</priority>
@@ -12,7 +12,7 @@
   
   
     <url>
-      <loc>https://anhtu07.github.io//about/</loc>
+      <loc>https://anhtu07.github.io/about/</loc>
        <lastmod>2017-11-02T00:00:00+07:00</lastmod>
       
        <changefreq>weekly</changefreq>
@@ -22,7 +22,7 @@
      </url>
   
     <url>
-      <loc>https://anhtu07.github.io//blog/</loc>
+      <loc>https://anhtu07.github.io/blog/</loc>
        <lastmod>2017-11-02T00:00:00+07:00</lastmod>
       
        <changefreq>weekly</changefreq>
@@ -32,7 +32,7 @@
      </url>
   
     <url>
-      <loc>https://anhtu07.github.io//</loc>
+      <loc>https://anhtu07.github.io/</loc>
        <lastmod>2017-11-02T00:00:00+07:00</lastmod>
       
        <changefreq>weekly</changefreq>
@@ -42,7 +42,7 @@
      </url>
   
     <url>
-      <loc>https://anhtu07.github.io//projects/</loc>
+      <loc>https://anhtu07.github.io/projects/</loc>
        <lastmod>2017-11-02T00:00:00+07:00</lastmod>
       
        <changefreq>weekly</changefreq>
@@ -52,7 +52,7 @@
      </url>
   
     <url>
-      <loc>https://anhtu07.github.io//sitemap.xml</loc>
+      <loc>https://anhtu07.github.io/sitemap.xml</loc>
        <lastmod>2017-11-10T00:20:35+00:00</lastmod>
       
        <changefreq>weekly</changefreq>
@@ -62,7 +62,7 @@
      </url>
   
     <url>
-      <loc>https://anhtu07.github.io//feed.xml</loc>
+      <loc>https://anhtu07.github.io/feed.xml</loc>
        <lastmod>2017-11-10T00:20:35+00:00</lastmod>
       
        <changefreq>weekly</changefreq>
@@ -72,7 +72,7 @@
      </url>
   
     <url>
-      <loc>https://anhtu07.github.io//feed.xslt.xml</loc>
+      <loc>https://anhtu07.github.io/feed.xslt.xml</loc>
        <lastmod>2017-11-10T00:20:35+00:00</lastmod>
       
        <changefreq>weekly</changefreq>

@@ -1,20 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xml" href="https://anhtu07.github.io//feed.xslt.xml"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.2.1">Jekyll</generator><link href="https://anhtu07.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://anhtu07.github.io//" rel="alternate" type="text/html" /><updated>2018-01-21T01:07:54+07:00</updated><id>https://anhtu07.github.io//</id><title type="html">TuNA</title><subtitle>Tu Nguyen personal blog</subtitle><entry><title type="html">Welcome to Massively: The Jekyll Theme!</title><link href="https://anhtu07.github.io//blog/welcome-to-massively-the-jekyll-theme/" rel="alternate" type="text/html" title="Welcome to Massively: The Jekyll Theme!" /><published>2017-10-31T00:00:00+07:00</published><updated>2017-10-31T00:00:00+07:00</updated><id>https://anhtu07.github.io//blog/welcome-to-massively-the-jekyll-theme</id><content type="html" xml:base="https://anhtu07.github.io//blog/welcome-to-massively-the-jekyll-theme/">&lt;h2 id=&quot;how-to-use-this-theme&quot;&gt;How to Use This Theme&lt;/h2&gt;
-&lt;p&gt;Just go ahead and read up on &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;how to install Jekyll&lt;/a&gt;. It’s not too hard I promise!&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xml" href="https://anhtu07.github.io/feed.xslt.xml"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.2.1">Jekyll</generator><link href="https://anhtu07.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://anhtu07.github.io/" rel="alternate" type="text/html" /><updated>2018-02-08T21:51:20+07:00</updated><id>https://anhtu07.github.io/</id><title type="html">TuNA</title><subtitle>Tu Nguyen personal blog</subtitle><entry><title type="html">Solving a Probabilistic Problem</title><link href="https://anhtu07.github.io/blog/probabilistic-game/" rel="alternate" type="text/html" title="Solving a Probabilistic Problem" /><published>2018-01-29T00:00:00+07:00</published><updated>2018-01-29T00:00:00+07:00</updated><id>https://anhtu07.github.io/blog/probabilistic-game</id><content type="html" xml:base="https://anhtu07.github.io/blog/probabilistic-game/">&lt;h2 id=&quot;the-problem&quot;&gt;The Problem&lt;/h2&gt;
 
-&lt;p&gt;Download this repository &lt;a href=&quot;https://github.com/iwiedenm/jekyll-theme-massively&quot;&gt;here&lt;/a&gt; and save it to any folder you want.&lt;/p&gt;
+&lt;p&gt;Suppose there are two players A and B. A owns $a$ dollars, while B owns $b$ dollars ($a, b \in \mathbb{N}$). Each turn of play, A has $p$ chance of winning and $q = 1-p$ chance of losing. if A win, he gets a dollar; if he loses, he lose one dollar. The game end when either of players is out of money. The question is what probability A will win (A gets $a+b$ dollar) or A will lose (A has 0 dollars).&lt;/p&gt;
 
-&lt;p&gt;Open a terminal window or a command line and &lt;code class=&quot;highlighter-rouge&quot;&gt;cd&lt;/code&gt; to that location.&lt;/p&gt;
+&lt;h2 id=&quot;the-model&quot;&gt;The Model&lt;/h2&gt;
 
-&lt;p&gt;Then enter: &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle exec jekyll serve&lt;/code&gt;. You can now access your new Jekyll site from &lt;a href=&quot;http://127.0.0.1:4000/&quot;&gt;http://127.0.0.1:4000/&lt;/a&gt;. Have fun exploring your new site!&lt;/p&gt;
+&lt;p&gt;This problem can be easily put into a mathematical model as follows. Let ${X_n}%_$ be a random variable sequence such that $X_i$ is the money that A owns at $i^{th}$ turn of the game. We can easily obtain the transition matrix $P$:&lt;/p&gt;
 
-&lt;h2 id=&quot;features&quot;&gt;Features&lt;/h2&gt;
-&lt;h3 id=&quot;auto-generating-sitemap&quot;&gt;Auto-Generating Sitemap&lt;/h3&gt;
-&lt;p&gt;The sitemap is auto generated! Just simply change the front matter of each site. It looks like so…&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sitemap:
-    priority: 0.7
-    lastmod: 2017-11-02
-    changefreq: weekly
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;h3 id=&quot;formspring-integration&quot;&gt;Formspring integration&lt;/h3&gt;
-&lt;p&gt;The contact form below each page on the footer actually collects information! Just change your email address in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt; file!&lt;/p&gt;</content><summary type="html">Huge thanks to HTML5 UP for making this awesome template! Let's see what it can do</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://anhtu07.github.io//images/pic02.jpg" /></entry></feed>
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{bmatrix} 
+1 &amp; 0 &amp; 0 &amp; \dots &amp; 0 \\ 
+q &amp; 0 &amp; p &amp; \dots &amp; 0 \\
+0 &amp; q &amp; 0 &amp; \dots &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; 0 &amp; \dots &amp; 1 
+\end{bmatrix} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;$X_i$ can be a element of the set $I = $ {$1,2,3,.., a+b$} and $p_{ij}$ is the probability that state $X_i$ will go to state $X_j$.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-notation&quot;&gt;The Notation&lt;/h2&gt;
+&lt;p&gt;We only need to find the probability that starting $a$ dollars, A will end up at having $a+b$ dollars after some turn (the other case is similiar). Let H equal inf {$n \geq 0 | X_n = a+b$}, this definition also means that $H$ is a random variable .Let define $h_i$ as follow $ h_i = P(H &amp;lt; \infty | X_0 = i) $&lt;/p&gt;
+
+&lt;h2 id=&quot;the-theorem&quot;&gt;The Theorem&lt;/h2&gt;
+&lt;p&gt;The set of $h_i$ with $i = \overline{1,a+b}$ is the non-negative smallest solution of the following system&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\left\{
+\begin{array}{l}
+h_i = 1 \ \ \ \ \ \ \ \ \ \ \ \ \ \ when \ i = a+b \\
+h_i = \sum_{j \in I} p_{ij} h_j \ when \ i \neq a+b
+\end{array}
+\right.
+\ \ \ \ \ \ \ (\ast)&lt;/script&gt;
+
+&lt;p&gt;The smallest solution here means that if $x$ is also non-negetive solution of the system $*$ then $x_i \geq h_i \forall i \in I$&lt;/p&gt;
+
+&lt;h3 id=&quot;proof&quot;&gt;Proof&lt;/h3&gt;
+&lt;p&gt;We first prove that $h = (h_i)_{i \in I}$ is a solution of *.
+If $i = a+b$ then&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+h_i = P(H &lt; \infty | X_0 = a+b) = P(0 &lt; \infty | x_0 = a+b) = 1 %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;If $i \neq a+b$ then&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+h_i = P(H &lt; \infty | X_0 = i) = \sum_{j \in I} P(H &lt; \infty | X_1 = j) \cdot P(X_i = j | X_0 = i) %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;Since &lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+P(H &lt; \infty \mid X_1 = j) = P(H &lt; \infty \mid X_0 = j) = h_j %]]&gt;&lt;/script&gt;. We conclude that&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;h_i = \sum_{j \in I} p_{ij} h_j&lt;/script&gt;
+
+&lt;p&gt;To this point, we have proven that &lt;script type=&quot;math/tex&quot;&gt;h = (h_i)_{i \in I}&lt;/script&gt; is a solution of system $\ast$. Now we will prove that $h$ is the smallest solution of $\ast$. Suppose &lt;script type=&quot;math/tex&quot;&gt;x = (x_i)_{i \in I}&lt;/script&gt; is a non-negative solution of $\ast$. Clearly, $x_{a+b} = 1$. With $i \neq a+b$, we have&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x_i = \sum_{j \in I} p_{ij}x_j =  p_{i, a+b} + \sum_{j \neq a+b} p_{ij}x_j \\
+= p_{i, a+b} + \sum_{j \neq a+b} p_{ij} (p_{j, a+b} + \sum_{r \neq a+b } p_{jr}x_r) \\
+= P_i(X_1 = a+b) + P(X_1 \neq a+b, X_2 = a+b) + \sum_{j \neq a+b} \sum_{r \neq a+b} p_{ij}p_{jr}x_r&lt;/script&gt;
+
+&lt;p&gt;If we continue to expand $x_r$ as above, we can derive that&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;P_i(X_1 = a+b) + ... + P_i(X_1 \neq a+b, X_2 \neq a+b, ... X_n = a+b) + \sum_{j_1 \neq a+b} ... \sum_{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn} \\
+= P_i(H \le n) + \sum_{j_1 \neq a+b} ... \sum{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn}&lt;/script&gt;
+
+&lt;p&gt;The “bunch of sum” in the above formula is used for nothing but it is greater than $0$. &lt;script type=&quot;math/tex&quot;&gt;x_i &gt; P_i(H \le n) \forall n&lt;/script&gt;. So &lt;script type=&quot;math/tex&quot;&gt;x_i \geq h_i \forall i \in I&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;In conclusion, $h$ is is the non-negative smallest solution of the system *&lt;/p&gt;
+
+&lt;h3 id=&quot;the-formula&quot;&gt;The Formula&lt;/h3&gt;
+
+&lt;p&gt;Back to our original problem, to calculate the chance of A wins starting from $a$ dollars is to find $h_a$ in the above system. By the above theorem, we need to solve the following system&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\left\{
+\begin{array}{l}
+h_0 = 0 \\
+h_{a+b} = 1 \\
+h_i = q h_{i-1} + p h_{i + 1} \forall i = \overline{1, a+b-1}
+\end{array}
+\right.&lt;/script&gt;
+
+&lt;p&gt;we rewrite our recursive formula as $h_{i+1} = \frac{1}{p} h_i - \frac{q}{p} h_{i+1}$. From this we can derive our characteristic polynomial&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x^2 - \frac{1}{p} x + \frac{q}{p}&lt;/script&gt;
+
+&lt;p&gt;We have two solution of the characteristic polynomial is&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x_1 = \frac{\frac{1}{p} + \sqrt{\frac{1}{p^2} - 4\frac{q}{p}}}{2} = \frac{\frac{1}{p} + \sqrt{\frac{1}{p^2} - 4\frac{1}{p} + 4}}{2} = \frac{\frac{1}{p} + \left\lvert\frac{q}{p}\right\lvert}{2}&lt;/script&gt;</content><summary type="html">This article presents the algebraic proof and method for solving a two-gamers problem</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://anhtu07.github.io/images/prob_model.png" /></entry></feed>
