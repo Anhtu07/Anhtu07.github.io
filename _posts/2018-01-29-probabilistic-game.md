@@ -25,7 +25,7 @@ q & 0 & p & \dots & 0 \\
 $X_i$ can be a element of the set $I = $ \{$1,2,3,.., a+b$\} and $p_{ij}$ is the probability that state $X_i$ will go to state $X_j$.
 
 ##  The Notation
-We only need to find the probability that starting $a$ dollars, A will end up at having $a+b$ dollars after some turn (the other case is similiar). Let H equal inf \{$n \geq 0 | X_n = a+b$\}, this definition also means that $H$ is a random variable .Let define $h_i$ as follow $ h_i = P(H < \infty | X_0 = i) $
+We only need to find the probability that starting $a$ dollars, A will end up at having $a+b$ dollars after some turn (the other case is similiar). Let H equal inf \{$n \geq 0 | X_n = a+b$\}, this definition also means that $H$ is a random variable .Let define $h_i$ as follow $ h_i = P(H < \infty | X_0 = iv) $
 
 ## The Theorem
 The set of $h_i$ with $i = \overline{1,a+b}$ is the non-negative smallest solution of the following system
@@ -97,7 +97,48 @@ $$x^2 - \frac{1}{p} x + \frac{q}{p}$$
 
 We have two solution of the characteristic polynomial is
 
-$$x_1 = \frac{\frac{1}{p} + \sqrt{\frac{1}{p^2} - 4\frac{q}{p}}}{2} = \frac{\frac{1}{p} + \sqrt{\frac{1}{p^2} - 4\frac{1}{p} + 4}}{2} = \frac{\frac{1}{p} + \left\lvert\frac{q}{p}\right\lvert}{2}$$
+$$x_{1,2} = \frac{\frac{1}{p} \pm \sqrt{\frac{1}{p^2} - 4\frac{q}{p}}}{2} = \frac{\frac{1}{p} \pm \sqrt{\frac{1}{p^2} - 4\frac{1}{p} + 4}}{2} = \frac{\frac{1}{p} \pm \left\lvert\frac{1}{p}-2\right\lvert}{2}$$
+
+In this problems, $p = 0$ or $1$ is trivial since if so, A will always lose or win at every turn. Therefore we will only consider $p, q \neq 0, 1$.
+
+If $p \neq q \neq \frac{1}{2}$ then the above characteristic polynomial has exactly two distinct solution. However we need not to consider which one of \{$p, q$\} is greater than $\frac{1}{2}$ because in both case, the polynomial has two solution $1$ and $\frac{q}{p}$. Our general formula will have the form
+
+$$h_n = c_1 (\frac{q}{p})^n + c_2$$
+
+where $C_1$ and $c_2$ is two real constant satifying the initial conditions
+
+$$
+\left\{
+\begin{array}{l}
+h_0 = c_1 + c_2 = 0 \\
+h_{a+b} = c_1 (\frac{q}{p})^{a+b} + c_2 = 1 \\
+\end{array}
+\right.
+$$
+
+Solving this equation, we easily obtain that $c_1 = \frac{-1}{1-(\frac{q}{p})^{a+b}}$ and $c_2 = \frac{1}{1-(\frac{q}{p})^{a+b}}$. Substitute $c_1$ and $c_2$ in our general formula
+
+$$h_n = \frac{1 - (\frac{q}{p})^n}{1-(\frac{q}{p})^{a+b}}$$
+
+This means that, the chance of winning for A will be $h_a = \frac{1 - (\frac{q}{p})^a}{1-(\frac{q}{p})^{a+b}}$
+
+Finally, in case $p = q = \frac{1}{2}$, $h_a = \frac{a}{a+b}$
+
+### Example
+Let consider a actual games where both A and B has 500 dollars. If both A and B has equally 50-50 chance of gaining money each turn, then from the above formula they have 50% chance of winning the whole game. However, if we just slightly favor A, giving him 0.502 chance of winning each turn, then surprisingly A will have approximately 99% of winning the whole game.
+
+Despite the high winning chance, a simple simulation of the game shows that it takes A millions of steps to win the whole game. Now, we may ask what the expected number of step of the game. In fact, we can easily construct a system that solves the expection of number of step similiar to system that solves the probability. Let $k_a = E(H \mid X_0 = a)$ then
+
+$$
+\left\{
+\begin{array}{l}
+k_{a+b} = 0 \\
+k_i = 1 + \sum{j \neq a+b} p_{ij} k_j \ when \ i \neq {a+b}
+\end{array}
+\right.
+$$
+
+Last words, this problem can be generalized into the problem [Markov Chain](https://en.wikipedia.org/wiki/Markov_chain) reaching its [Absorbing State](https://en.wikipedia.org/wiki/Absorbing_Markov_chain)
 
 
 
