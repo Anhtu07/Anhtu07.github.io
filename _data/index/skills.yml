@@ -2,5 +2,5 @@
 
 label: Ability
 id : cs
-aspects: Motivation, GitHub, Java, HTML/CSS, Docker, Python
-percentage: 100, 65, 70, 60, 60, 55
+aspects: Graph Theory, Functional Analysis, Statistics, ML Theory, Pytorch, Pokemon Battle
+percentage: 70, 55, 45, 60, 75, 95
