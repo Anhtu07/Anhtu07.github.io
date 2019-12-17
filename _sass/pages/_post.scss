@@ -115,6 +115,14 @@ a.read-more {
   }
 }
 
+#cvpage {
+  padding-bottom: 20px;
+  min-height: 70vh;
+  .cvpage-header {
+    margin: 0 auto 20px;
+  }
+}
+
 .post-navigation {
   background-color: #f6f6f6;
   @include box-shadow;

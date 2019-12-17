@@ -4,17 +4,17 @@
 ####################################
 #
 title: Tu NA
-email:
-description: Mathematics and Theoretical Machine Learning.
+email: tu.nguyeanh.96@gmail.com
+description: (Extremal) Graph Theory
 url: # the base hostname & protocol for your site
-keywords: ["blog", "mathematics", "machine learning"]
+keywords: ["blog", "graph theory", "discrete mathematics", "machine learning"]
 
 #
 ###################################
 # Jekyll configuration
 ####################################
 #
-timezone:          Asia/Tokyo
+timezone:          Asia/Hanoi
 markdown:          kramdown
 highlighter:       rouge
 excerpt_separator: <!--more-->
@@ -37,7 +37,7 @@ owner:
   avatar: espeon.png
   job: "Undergraduate student in Applied Mathematics"
   bio: ""
-  email:
+  email: tu.nguyenanh.96@gmail.com
   disqus-shortname:
   twitter: #username
   facebook: #username
@@ -48,7 +48,7 @@ owner:
     ad-client:
     ad-slot:
   bing-verify:
-  github: #username
+  github: Anhtu07
   gitlab: #username
   stackoverflow: #123456/username   from a "http://stackoverflow.com/users/123456/username" link
   linkedin: #username
