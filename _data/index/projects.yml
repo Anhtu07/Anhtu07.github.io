@@ -1,4 +1,0 @@
-- name: Face Recognition
-  descr: "Detect human face"
-  image: pong.png
-  github: https://github.com/anhtu07/
