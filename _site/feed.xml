@@ -5,8 +5,8 @@
     <description>Mathematics and Theoretical Machine Learning.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>2019-12-17</pubDate>
-    <lastBuildDate>Tue, 17 Dec 2019 14:21:56 +0900</lastBuildDate>
+    <pubDate>2019-12-18</pubDate>
+    <lastBuildDate>Wed, 18 Dec 2019 12:49:40 +0900</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
@@ -136,7 +136,7 @@ k_i = 1 + \sum{j \neq a+b} p_{ij} k_j \ when \ i \neq {a+b}
 &lt;p&gt;Last words, this problem can be generalized into the problem &lt;a href=&quot;https://en.wikipedia.org/wiki/Markov_chain&quot;&gt;Markov Chain&lt;/a&gt; reaching its &lt;a href=&quot;https://en.wikipedia.org/wiki/Absorbing_Markov_chain&quot;&gt;Absorbing State&lt;/a&gt;&lt;/p&gt;
 
 </description>
-        <pubDate>2019-12-17</pubDate>
+        <pubDate>2019-12-18</pubDate>
         <link>http://localhost:4000/articles/2018-01/probabilistic-game</link>
         <guid isPermaLink="true">http://localhost:4000/articles/2018-01/probabilistic-game</guid>
         
