@@ -5,9 +5,20 @@
     <description>(Extremal) Graph Theory</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>2019-12-18</pubDate>
-    <lastBuildDate>Wed, 18 Dec 2019 04:00:46 +0000</lastBuildDate>
+    <pubDate>2020-01-08</pubDate>
+    <lastBuildDate>Wed, 08 Jan 2020 16:58:33 +0000</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>Polynomial algorithm for some </title>
+        <description>&lt;h2 id=&quot;the-problem&quot;&gt;The Problem&lt;/h2&gt;
+</description>
+        <pubDate>2020-01-08</pubDate>
+        <link>http://localhost:4000/articles/2020-01/dominating-set</link>
+        <guid isPermaLink="true">http://localhost:4000/articles/2020-01/dominating-set</guid>
+        
+        
+      </item>
     
       <item>
         <title>Solving a Probabilistic Problem</title>
@@ -136,7 +147,7 @@ k_i = 1 + \sum{j \neq a+b} p_{ij} k_j \ when \ i \neq {a+b}
 &lt;p&gt;Last words, this problem can be generalized into the problem &lt;a href=&quot;https://en.wikipedia.org/wiki/Markov_chain&quot;&gt;Markov Chain&lt;/a&gt; reaching its &lt;a href=&quot;https://en.wikipedia.org/wiki/Absorbing_Markov_chain&quot;&gt;Absorbing State&lt;/a&gt;&lt;/p&gt;
 
 </description>
-        <pubDate>2019-12-18</pubDate>
+        <pubDate>2020-01-08</pubDate>
         <link>http://localhost:4000/articles/2018-01/probabilistic-game</link>
         <guid isPermaLink="true">http://localhost:4000/articles/2018-01/probabilistic-game</guid>
         

@@ -14,7 +14,7 @@ keywords: ["blog", "graph theory", "discrete mathematics", "machine learning"]
 # Jekyll configuration
 ####################################
 #
-timezone:          Asia/Hanoi
+timezone:          America/New_York
 markdown:          kramdown
 highlighter:       rouge
 excerpt_separator: <!--more-->
