@@ -16,7 +16,8 @@ Studying how to arrive at a good approximation and where the number $1.4969$ com
 
 This newly developed technique can be applied to solve two open problems: MDS in $(fork, \overline{P_5})$-free and $(claw, P_5)$-free graph. For references, visit [here](http://www.graphclasses.org/classes/problem_Domination.html). Let $F$ be a set of graph, a graph $G$ is called $F$-free if $G$ do not have any induced subgraph contained in $F$. The rest of this blog, I will try to describe the general idea of how to solve these two problem and avoid going through too much proof. Extensive readers can access to my [paper](/docs/Polynomial_Algorithm_for_Minimum_Dominating_Set.pdf) for more details.
 
-<script type="text/tikz"> \begin{tikzpicture} 
+<script type="text/tikz"> 
+\begin{tikzpicture}
 \draw[fill=black] (0,1) circle (3pt);
 \draw[fill=black] (1,0) circle (3pt);
 \draw[fill=black] (2,1) circle (3pt);
@@ -34,16 +35,17 @@ This newly developed technique can be applied to solve two open problems: MDS in
 \draw[fill=black] (7,0) circle (3pt);
 \draw[fill=black] (8,1) circle (3pt);
 \draw[fill=black] (7,-1) circle (3pt);
-\draw[fill=black] (7,-2) circle (3pt) node[below]{$\overline{P_5}$};
+\draw[fill=black] (7,-2) circle (3pt) node[below]{\(\bar{P_5}\)};
 \draw[thick] (7,0)--(8,1)--(6,1)--(7,0)--(7,-1)--(7,-2);
 
 \draw[fill=black] (9,0) circle (3pt);
 \draw[fill=black] (10.5,0) circle (3pt);
-\draw[fill=black] (12,0) circle (3pt) node[below]{$P_5$};
+\draw[fill=black] (12,0) circle (3pt) node[below]{\(P_5\)};
 \draw[fill=black] (13.5,0) circle (3pt);
 \draw[fill=black] (15,0) circle (3pt);
 \draw[thick] (9,0)--(15,0);
-\end{tikzpicture} </script>
+\end{tikzpicture}
+</script>
 
 
 ### $(fork, \overline{P_5})$-free Graphs
@@ -74,9 +76,45 @@ And one final important lemma to complete this section
 **Lemma 3.** Minimum connected dominating set of $G[A \cup C]$ is also minimum connected dominating set of $G$
 
 
-
-
 ### $(claw, P_5)$-free Graph
+
+In this section, we will introduce the concept of reducing set to point out that minimum dominating set can be found in polynomial time in $(claw, P_5)$-free class. For brevity, every graph mentioned in this section is $(claw, P_5)$-free.
+We can easily prove the following lemma by using the same idea from Lemma 1.
+
+**Lemma 3.**
+Every connected component of minimal dominating set is clique
+
+
+Let $D_1$ be the minimal dominating set of $G$. Denote $C^1_1$ , $C^1_2$ , ... , $C^1\_{d\_1}$ be connected components of $D_1$ (here, we suppose that $D_1$ has more than 1 components i.e $d_1 > 1$). If $D_1$ is not minimum, there must exist another dominating set $D_2$ has smaller cardinality $|D_2|<|D_1|$. We also denote $C^1_1$ , $C^1_2$ , ... , $C^1\_{d\_2}$ be connected components of $D_2$.
+We will say two components $C^1_i$ and $C^2_j$ adjacent if $\exists \ v_1 \in C^1_i$ and $C^2_j$ such that $v_1$ coincides $v_2$ or $v_1$ is adjacent to $v_2$. By definition of connected components, it is easily seen that two different components of the same dominating set are not adjacent. Therefore, we only say adjacent components when one component belongs to a dominating set, and the other one belongs to another dominating set.
+Let $R = G[D_1 \cup D_2]$, and denote $R_1, R_2, ..., R_k$ be connected components fo $G$. Since $|D_2| < |D_1|$, there must exists $R_i$ where the number of vertices belonging to $D_1$ less that that of which in $D_1$. We call such components is reducing set, and show that if from $D_1$ we replace $D_1 \cap R_i$ by $D_2 \cap R_i$, we will obtain smaller dominating set.
+
+**Lemma 4.**
+Let $D$ be a minimal dominating set of $G$, $a, b \in D$ be two adjacent vertices. Replacing $\{u, v\}$ by $\{u, b\}$ or ($\{v, a\}$) obtains another dominating set $D'$ with the same cardinality as $D$
+
+*Proof*. We only need to prove $D \cup u \setminus a$ a dominating set. 
+Let $x \in N(u)$ and $x \notin \{a, v\}$. There must be a vertex $x$ in neighbor of $u$ and different form $a$ and $v$ because if $N(u) = \{a, v\}$ then replacing $\{u, v\}$ by $\{v, a\}$, we obtain $D'$ with satified properties. 
+If $\forall x \in N(u)$, $x \notin \{a, v\}$, $x$ is adjacent to $v$, then replacing $\{u, v\}$ by $\{v, a\}$ also creates dominating set $D'$ such that $|D'| =|D|$\\
+If $\exists x \in N(u)$, $x \notin \{a, v\}$, $x$ is not adjacent to $v$, then $x$ must be adjacent to $a$ otherwise $\{u, a, x, v\}$ induces a claw. In this case replacing $\{u, v\}$ by $\{v, a\}$ also creates dominating set $D'$ 
+Similar argument can be made for $\{u, b\}$ 
+We will point out that, every minimal dominating set in this class has a independent dominating set with less or equal cardinality. Inspired by augmenting technique, to deal with finding minimum dominating set, we will start with a minimal dominating set $D_1$, and keep reducing the number of vertices in $D_1$ until we are longer able to. Suppose $D_1$ has a component with more than 1 node, denote $u, v \in D_1$ then by lemma 6, we can replace $u, v$ by $u, b$ or $v, a$ without increasing number of node and keep the dominating properties. This replacement step always creates a connected component with single vertex, since $a \in N^r_D(u)$ (or $b \in N^r_D(v)$). However, above argument can only be true if there is no components in $D_1$ which contains only a single vertex $v$ and all of its neighbor is adjacent to other vertex in $D_1$. In this case, we can replace $v$ by one of its neighbor. If the dominating obtained after the replacement step has a non-clique connected component then it is not minimal, we can continue to remove vertices in $D_1$ to obtain smaller one. We now assume that every connected components of $D_1$ has more than 2 vertices. Let $C^1_i$ is a components of $D_1$ and $C^1_i$ = $x^i\_1$ , $x^i\_2$ , ... , $x^i\_{k\_i}$ ($k_i$ < 2). In the replacement step, we replace $C^1_i$ by $\{x^i_1, y^i_2, ..., y^i_k \}$ where $y^i_j \in N^r_D(x_j)$ $\forall \ j \in \{2, 3, ..., k_i \}$
+
+
+**Lemma 5.**
+After perform series of replacement steps, we obtain a dominating independent set
+
+This lemma tells us that, for every minimal dominating set in $G$ there exist an independent set with equal or smaller size. Hence, to find minimum dominating set, we focus on finding minimum independent dominating set. Let $D\_1$ = $x^1\_1$ , $x^1\_2$ , ... , $x^1\_{k\_1}$ and $D\_2$ = $x^2\_1$ , $x^2_2$ , ..., $x^2\_{k\_2}$ be two minimal independent dominating set and $R = G[D_1 \cup D_2]$. Since $D_1$ and $D_2$ are independent, no vertices within the two set is adjacent to each other. Furthermore $\Delta(R) \leq 2$, since if $v \in R$ and $d(v) \leq 3$, suppose $v \in D_1$, then $N_R(v) \subset D_2$, therefore $v$ combined with its neighbors in $R$ create a claw. This means that every connected component of $R$ can only be path or cycle. Moreover, $G$ is $P_5$-free, every components of $R$ cannot have more than 5 vertices.
+
+
+**Lemma 6.**
+If $C$ is a connected component of $R$, denote $C = C_1 \cup C_2$ where $C_1$ and $C_2$ are respectively connected components of $D_1$ and $D_2$, then $D_1 \setminus C_1 \cup C_2$ is a dominating set.
+*Proof.* Since $C$ is a connected component with more than 2 vertices, suppose $x_1$ and $x_2$ belongs to $C$ and adjacent to each other, where $x_1 \in C_1$ and $x_2 \in C_2$. Without loss of generality, assume contradictory that $\exists x \in G \setminus N[D_1 \setminus C]$ such that $x$ is adjacent to $x_1$ but not $x_2$. However, since $D_2$ is also dominating set, there must exist $y_2$ does not belong to $C$ and has $x$ as its neighbor. Since $D_1$ is also a dominating set, and by maximality of $C$, there must be a vertex $y_1 \in D_1$ but not in $C$ such that $y_1$ is adjacent to $y_2$ but not $x$. In this case $x_2, x_1, x, y_2, y_1$ induces $P_5$.
+
+We are now able to state the main theorem in this section.
+
+**Theorem 2.** Minimum doninating set in $(claw, P_5)$-free graph can be found in polynomial time.
+
+*Proof.* From Lemma 9, we know that, in  $(claw, P_5)$-free graph, there exists an independent dominating has the minimum cardinality. We begin our algorithm by finding a minimal independent dominating set. By lemma 10, we have that a connected component of the union of two minimal dominating set can serve as reducing set. Moreover, sine $G$ is $claw$-free, the bipartite graph can only be path or cycle. $P_5$-free property make the connected components cannot have more than 5 vertices. Therefore, we can enumerate all path with length three and all cycles with length five. If no path or cycles founded can reduce the number of the current dominating set, we conclude that the minimum dominating set is found. Since after each step, the number of vertices decrease at least one, so after at most $n$ step, an minimum dominating set is found.
 
 
 
