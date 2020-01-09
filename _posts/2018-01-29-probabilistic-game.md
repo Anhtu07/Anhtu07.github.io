@@ -2,7 +2,7 @@
 layout: post
 title:  "Solving a Probabilistic Problem"
 date:   2018-01-29
-excerpt: "This article presents the algebraic proof and method for solving a two-gamers problem"
+excerpt: "This post presents the algebraic proof and method for solving a two-gamers problem"
 image: "/images/prob_model.png"
 ---
 

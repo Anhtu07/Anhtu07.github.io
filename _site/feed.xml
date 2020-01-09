@@ -5,15 +5,54 @@
     <description>(Extremal) Graph Theory</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>2020-01-08</pubDate>
-    <lastBuildDate>Wed, 08 Jan 2020 16:58:33 +0000</lastBuildDate>
+    <pubDate>2020-01-09</pubDate>
+    <lastBuildDate>Thu, 09 Jan 2020 04:13:02 +0000</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
-        <title>Polynomial algorithm for some </title>
+        <title>Polynomial Algorithm for Minimum Dominating Set in Some Family of Graphs</title>
         <description>&lt;h2 id=&quot;the-problem&quot;&gt;The Problem&lt;/h2&gt;
+&lt;p&gt;A dominating set of a graph $G = (V(G),E(G))$ is a set $D \subset V$ of vertices such that every other vertices not in $D$ has at least a neighbor in it. Concretely, the dominating set $D$ of graph $G$ is defined as $D := {v \in V(G) \ | \ \forall u \in V(G) \setminus D, \ \exists v \in D \ \text{such that} \ v \in N(u) }$, where $N(u) := {v \in V(G) \text{ such that } (u,v) \in E(G)}$. The minimum dominating set problem asks for such a set with minimum cardinality. This problem is first stated by C.F. De Jaenisch in 1862 when he tried to find the minimum number of queens to dominate a 8x8 chessboard. Modeling the queens-problem into graph is fairly simple: each square represents a node, and two nodes have a link if a queen can travel between them in a move. From this, it is straightforward to see that minimum number of queens to cover all the chessboard will be the smallest number of vertices to dominate the entire graph. 
+However, dominating set appears in many applications than just an interesting puzzle, such as online social networking or communication network. Each application requires a variation of dominating set. For example, Positive Influences Dominating Set (PIDS) is proposed for problem in social theory, while Connected Dominating Set (CDS) can serve as backbone for many communication networks.&lt;/p&gt;
+
+&lt;p&gt;Most algorithm used in applications can only return a good approximation of the minimum dominating set (MDS). At the moment, we cannot hope for an efficient algorithm since MDS problem is NP-hard. In fact, the best known algorithm has exponential time complexity $O(1.4969^n)$, achieved by using a measure and conquer approach.&lt;/p&gt;
+
+&lt;p&gt;Studying how to arrive at a good approximation and where the number $1.4969$ comes from are interesting. I hope to cover these topics in the future. But in this post, I want to tackle a different question related to MDS problem: On what case the MDS problem can be solved in polynomial time? This question, is, of course, not without basis. It based on a huge amount of work on the independent set. In literature, finding maximum independent set (MIS) problem is proved to have efficient algorithm (polynomial time) in many families of graph using a technique named augmenting set. Since dominating and independent set are closely related, a simple idea is to inherit the augmenting method for MDS problem. Because the general idea is we want to find a subgraph that can reduce the number of vertices in the dominating set after each iterative step, I named it reducing set.&lt;/p&gt;
+
+&lt;p&gt;This newly developed technique can be applied to solve two open problems: MDS in $(fork, \overline{P_5})$-free and $(claw, P_5)$-free graph. For references, visit &lt;a href=&quot;http://www.graphclasses.org/classes/problem_Domination.html&quot;&gt;here&lt;/a&gt;. Let $F$ be a set of graph, a graph $G$ is called $F$-free if $G$ do not have any induced subgraph contained in $F$. The rest of this blog, I will try to describe the general idea of how to solve these two problem and avoid going through too much proof. Extensive readers can access to my &lt;a href=&quot;/docs/Polynomial_Algorithm_for_Minimum_Dominating_Set.pdf&quot;&gt;paper&lt;/a&gt; for more details.&lt;/p&gt;
+
+&lt;h3 id=&quot;fork-overlinep_5-free-graphs&quot;&gt;$(fork, \overline{P_5})$-free Graphs&lt;/h3&gt;
+&lt;p&gt;In this section, for convinient, every graphs are $(fork, \overline{P_5})$-free. My first idea for this problem is we first start with an minimal dominating set. This set will contains many maximal connected components. If this set is not minimum, then of course, exists other sets with smaller cardinality. My intuition is we can replace components of the current DS by other components to obtain smaller one. Thinking in this direction, I want to know the characteristic of a components in a minimal dominating set.&lt;/p&gt;
+
+&lt;p&gt;The following lemma is stated on connected dominating set. Since after a long process of refining my proof, I realize I am longer need the reducing set concept for this class of graphs, but rather a decomposition scheme for this problem. In fact, I had a proof using  reducing set, but when I found a shorter proof, it seemed redundant so I obmited it. However, the idea for reducing set is much clearer in the next section.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Lemma 1.&lt;/strong&gt; The minimal connected dominating set of a $(fork, \overline{P_5})$ - free graph can only be path, cycle or clique.&lt;/p&gt;
+
+&lt;p&gt;The main result is to prove the minimum CDS only have a limited vertices besides some special cases. As I mentioned, how I derived from reducing set idea to this idea is a long process. But mainly I popped up with idea since I found it very hard to construct a graph that has minimum dominating set with more than 8 vertices.&lt;/p&gt;
+
+&lt;p&gt;After we come up with that lemma, the rest of the work only contains of ‘‘rigorous proof”. We have two cases to deal with: the first one is dominating cliquqe, and the second one is dominating path or cycle.&lt;/p&gt;
+
+&lt;p&gt;To find minimum dominating clique, we consider each vertex and search for the minimum dominating clique contains that vertex. Let $v \in V(G)$, if $C = v \cup N(v)$ is not a dominating set then we can conclude that $v$ does not belong to any dominating clique and continue our search to another vertex. If $C$ is dominating set of $G$, then we sequentially remove vertex of $C$ until we obtain a minimal dominating containing $v$ in $C$. The following lemma show that we can find the minimum dominating set containing $v$ in polynomial time.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Lemma 2.&lt;/strong&gt; IF $C = v\cup N(v)$ is a dominating set, $M \subset  C$ such that $M$ is minimal dominating set containing $v$, then $M$ is minimum dominating set contain $v$&lt;/p&gt;
+
+&lt;p&gt;To deal with the second case, we try to decompose the graph into smaller ones, until it becomes $P_8$-free. Concretely, I utilize the following theorem on graph without fork proved by Alekseev&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Theorem 1.&lt;/strong&gt; If $G$ is $fork$-free, contains both $claw$ and $P_6$ as induced subgraph, then there exists a polynomial algorithm that partition $V(G)$ into 3 subsets $A, B$ and $C$ which satisfies all of the following:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;$G(B)$ contains $P_6$ as induced subgraph&lt;/li&gt;
+  &lt;li&gt;Any vertices in A is connected to every vertices in B&lt;/li&gt;
+  &lt;li&gt;There is no edge which has endpoints in $B$ and $C$&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And one final important lemma to complete this section&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Lemma 3.&lt;/strong&gt; Minimum connected dominating set of $G[A \cup C]$ is also minimum connected dominating set of $G$&lt;/p&gt;
+
+&lt;h3 id=&quot;claw-p_5-free-graph&quot;&gt;$(claw, P_5)$-free Graph&lt;/h3&gt;
+
 </description>
-        <pubDate>2020-01-08</pubDate>
+        <pubDate>2020-01-09</pubDate>
         <link>http://localhost:4000/articles/2020-01/dominating-set</link>
         <guid isPermaLink="true">http://localhost:4000/articles/2020-01/dominating-set</guid>
         
@@ -147,7 +186,7 @@ k_i = 1 + \sum{j \neq a+b} p_{ij} k_j \ when \ i \neq {a+b}
 &lt;p&gt;Last words, this problem can be generalized into the problem &lt;a href=&quot;https://en.wikipedia.org/wiki/Markov_chain&quot;&gt;Markov Chain&lt;/a&gt; reaching its &lt;a href=&quot;https://en.wikipedia.org/wiki/Absorbing_Markov_chain&quot;&gt;Absorbing State&lt;/a&gt;&lt;/p&gt;
 
 </description>
-        <pubDate>2020-01-08</pubDate>
+        <pubDate>2020-01-09</pubDate>
         <link>http://localhost:4000/articles/2018-01/probabilistic-game</link>
         <guid isPermaLink="true">http://localhost:4000/articles/2018-01/probabilistic-game</guid>
         
