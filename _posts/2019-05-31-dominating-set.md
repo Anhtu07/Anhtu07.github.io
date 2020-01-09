@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Polynomial Algorithm for Minimum Dominating Set in Some Family of Graphs"
-date:   2020-01-09
+date:   2019-05-31
 excerpt: "This post present proof and techniques for finding minimum dominating set in some families of graphs"
 image: "/images/prob_model.png"
 ---
