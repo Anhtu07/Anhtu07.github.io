@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Heat Simulation"
+title:  "Heat Simulation with FreeFEM"
 date:   2020-01-14
-excerpt: "Heat Simulation"
+excerpt: "Analyzing a simple heat simulation problem"
 image: ""
 ---
 
