@@ -28,15 +28,19 @@ The Laplacian operator at point $X\_0 = (x\_0, y\_0)$ can be interpreted as the 
 ### How to construct weak solution ?
 
 Numerical solution of heat equations relies on two schemes: discrete time scheme and finite elements method.  The idea is fairly simple, we first divide the time horizon $[0, T]$ into small parts, each parts has the size $\delta t$ ($t_i = i * \delta t$) and approximate $\frac{\partial u}{\partial t} = \frac{u^n(X) - u^{(n - 1)}(X)}{\delta t}$ (here, we denote $u^n(X) =  u(X, t = t_n)$ ), and then try to solve $u^n$ at each time step given we know the previous step $u^{n-1}. To do this, we use finite element methods to solve the following (Backward Euler):
+
+
 $$
 \begin{align}
- \frac{u^n(X) - u^{(n - 1)}(X)}{\delta t} - \Delta u^n & = f^n \label{*} \\
+ \frac{u^n(X) - u^{(n - 1)}(X)}{\delta t} - \Delta u^n & = f^n \tag{*} \\
  u^0(X) & = u_0 \\
  u(X, t)_{| \Gamma_1} & = 0 \\
 \frac{\partial u}{\partial n} (X, t)_{| \Gamma_2} &= u_n(X, t)
 \end{align}
 $$
-The main idea of finite element methods is to partition the domain $\Omega$ into triangles (each triangle is called an element),  each triangle will have a corresponding basis function (commonly linear function). The function $u^(n)$ will be the linear combination of these basis functions.  When we have the mesh (partition of the domain), and choose a function space to approximate $u$, the only work left is to find the coefficient for each basis functions. Finding these coefficient, in fact, is equivalent to solve system of linear equation. And this equation comes from the construction of weak problem. Let test function $v$ be a function whose value on $\Gamma_1$ equals 0.
+
+
+The main idea of finite element methods is to partition the domain $\Omega$ into triangles (each triangle is called an element),  each triangle will have a corresponding basis function (commonly linear function). The function $u^n$ will be the linear combination of these basis functions.  When we have the mesh (partition of the domain), and choose a function space to approximate $u$, the only work left is to find the coefficient for each basis functions. Finding these coefficient, in fact, is equivalent to solve system of linear equation. And this equation comes from the construction of weak problem. Let test function $v$ be a function whose value on $\Gamma_1$ equals 0.
 $$
 \begin{align}
 \int_{\Omega}\left(\frac{u^n(X) - u^{(n - 1)}(X)}{\delta t}v \right) - \int_\Omega \Delta u^n v & = \int_\Omega f^n v \\
