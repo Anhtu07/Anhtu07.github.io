@@ -3,7 +3,8 @@ layout: post
 title:  "Heat Simulation with FreeFEM"
 date:   2020-01-14
 excerpt: "Analyzing a simple heat simulation problem"
-image: ""
+sitemap:
+  lastmod: 2020-01-14
 ---
 
 ## The Problem
