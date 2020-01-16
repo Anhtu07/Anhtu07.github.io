@@ -4,7 +4,7 @@ title:  "Heat Simulation with FreeFEM"
 date:   2020-01-14
 excerpt: "Analyzing a simple heat simulation problem"
 sitemap:
-  lastmod: 2020-01-14
+  lastmod: 2020-01-16
 ---
 
 ## The Problem
@@ -54,6 +54,8 @@ The equation (5) can be shorten as $a(u, v) = L(v)$ where $a$ is bilinear operat
 And that's basically everything we need to use freefem++ to model the heat flow ! I will cover a little more about finite element method in the subsequent blogs. For now, we will turn to simulate the phenomenon described earlier.
 
 ### Numerical solution 
+
+The last time I implemented FEM for heat equation by python, and Stokes equations by Matlab was horrible experiences.  The most annoying parts are mesh triangulation and calculating values on stiffness and load matrix to satisfy all boundary conditions. However, I found everything is so simple with Freefem. Basically, there's only two step, '' draw " the domain and rewrite the weak problem. The following code is the simulation of physical phenomena described in the introduction. There's a minor change is that I put a wall divided the room into two half, and this wall have diffusivity constant 3 times greater than that of air.
 
 ```c++
 border C1(t=0,1){x=-5+t;y=4;label=100;}
