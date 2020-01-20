@@ -40,7 +40,7 @@ In finite element method, we want to approximate $u$ by basis functions which ar
 $$
 u = \sum_{i = 1}^k \alpha_i \phi_i,
 $$
-where $\phi_i$ is basis function corresponding to element $i$. The reason why we want to construct the original problem in the form of $\alpha(u, v) = L(v)$ (*) is that in this case, finding coefficient $\alpha_i$ is equivalent to solving a system of linear equations. Finding $u$ which satisfies (\*) for every $v$ in the chosen function space (approximated by span {$\phi\_1, \phi\_2, ..., \phi\_k) is equivalent to finding $u$ which satisfies $\alpha(u, \phi_i) = L(\phi_i)$ for all basis function $phi\_i$. Hence, in its core, we need to solve the following system of equations:
+where $\phi_i$ is basis function corresponding to element $i$. The reason why we want to construct the original problem in the form of $\alpha(u, v) = L(v)$ (*) is that in this case, finding coefficient $\alpha_i$ is equivalent to solving a system of linear equations. Finding $u$ which satisfies (\*) for every $v$ in the chosen function space (approximated by span {$\phi\_1, \phi\_2, ..., \phi\_k$} is equivalent to finding $u$ which satisfies $\alpha(u, \phi_i) = L(\phi_i)$ for all basis function $phi\_i$. Hence, in its core, we need to solve the following system of equations:
 $$
 \forall i \in \{1, 2, ... , k \} \\
 \sum_{j = 1}^k \alpha_j \alpha(\phi_j, \phi_i) = L(\phi_i)
