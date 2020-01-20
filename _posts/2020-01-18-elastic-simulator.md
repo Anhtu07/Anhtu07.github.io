@@ -36,34 +36,27 @@ $$
 
 ### How to construct weak solution ?
 
-Numerical solution of heat equations relies on two schemes: discrete time scheme and finite elements method.  The idea is fairly simple, we first divide the time horizon $[0, T]$ into small parts, each parts has the size $\delta t$ ($t_i = i * \delta t$) and approximate $\frac{\partial u}{\partial t} = \frac{u^n(X) - u^{(n - 1)}(X)}{\delta t}$ (here, we denote $u^n(X) =  u(X, t = t_n)$ ), and then try to solve $u^n$ at each time step given we know the previous step $u^{n-1}. To do this, we use finite element methods to solve the following (Backward Euler):
-
-
+In finite element method, we want to approximate $u$ by basis functions which are defined over all elements of the domain, i.e
+$$
+u = \sum_{i = 1}^k \alpha_i \phi_i,
+$$
+where $\phi_i$ is basis function corresponding to element $i$. The reason why we want to construct the original problem in the form of $\alpha(u, v) = L(v)$ (*) is that in this case, finding coefficient $\alpha_i$ is equivalent to solving a system of linear equations. Finding $u$ which satisfies (\*) for every $v$ in the chosen function space (approximated by span {$\phi\_1, \phi\_2, ..., \phi\_k) is equivalent to finding $u$ which satisfies $\alpha(u, \phi_i) = L(\phi_i)$ for all basis function $phi\_i$. Hence, in its core, we need to solve the following system of equations:
+$$
+\forall i \in \{1, 2, ... , k \} \\
+\sum_{j = 1}^k \alpha_j \alpha(\phi_j, \phi_i) = L(\phi_i)
+$$
+Now, we turn back to our system of elasticity. Denote $v$ as test function and belongs to $[H^1_0 (\Omega)]^2$ (we are working on  two dimensional case). The space of test function is usually chosen so that it satisfies the Dirichlet boundary condition. Multiply (1) by $v$ and taking integral on domain $\Omega$, we have:
 $$
 \begin{align}
- \frac{u^n(X) - u^{(n - 1)}(X)}{\delta t} - \Delta u^n & = f^n \tag{*} \\
- u^0(X) & = u_0 \\
- u(X, t)_{| \Gamma_1} & = 0 \\
-\frac{\partial u}{\partial n} (X, t)_{| \Gamma_2} &= u_n(X, t)
+\int_{\Omega}-div(Ae(u)) & = \int_{\Omega}fv \\
+\int_{\Omega} Ae(u) : \nabla v & = \int_{\Omega} fv + \int_{\Gamma_N} gv
 \end{align}
 $$
 
-
-The main idea of finite element methods is to partition the domain $\Omega$ into triangles (each triangle is called an element),  each triangle will have a corresponding basis function (commonly linear function). The function $u^n$ will be the linear combination of these basis functions.  When we have the mesh (partition of the domain), and choose a function space to approximate $u$, the only work left is to find the coefficient for each basis functions. Finding these coefficient, in fact, is equivalent to solve system of linear equation. And this equation comes from the construction of weak problem. Let test function $v$ be a function whose value on $\Gamma_1$ equals 0.
-$$
-\begin{align}
-\int_{\Omega}\left(\frac{u^n(X) - u^{(n - 1)}(X)}{\delta t}v \right) - \int_\Omega \Delta u^n v & = \int_\Omega f^n v \\
-\int_\Omega \frac{u^n v}{\delta t} + \int_\Omega \nabla u^n \nabla v & = \int_\Omega \frac{u^{n-1} v}{\delta t} + \int_\Omega fv + \int_{\partial \Omega} \frac{\partial u^n}{\partial n} v \\
-\int_\Omega \frac{u^n v}{\delta t} + \int_\Omega \nabla u^n \nabla v - \int_{\Gamma_2} u_n(X, t_n)v & = \int_\Omega \frac{u^{n-1} v}{\delta t} + \int_\Omega fv \tag{5} \\
-\end{align}
-$$
-The equation (5) can be shorten as $a(u, v) = L(v)$ where $a$ is bilinear operator, and $L$ is linear operator. The heat equation new asks for $u$ satisfy (5) with every $v$ in the chosen function space. The problem has unique solutions according to Lax-Milgram Theorem.
-
-And that's basically everything we need to use freefem++ to model the heat flow ! I will cover a little more about finite element method in the subsequent blogs. For now, we will turn to simulate the phenomenon described earlier.
 
 ### Numerical solution 
 
-The last time I implemented FEM for heat equation by python, and Stokes equations by Matlab was horrible experiences.  The most annoying parts are mesh triangulation and calculating values on stiffness and load matrix to satisfy all boundary conditions. However, I found everything is so simple with Freefem. Basically, there's only two step, '' draw " the domain and rewrite the weak problem. The following code is the simulation of physical phenomena described in the introduction. There's a minor change is that I put a wall divided the room into two half, and this wall have diffusivity constant 3 times greater than that of air.
+The following code is to simulate how a elliptic shape deform under gravity.
 
 ```c++
 real E = 21e5;
