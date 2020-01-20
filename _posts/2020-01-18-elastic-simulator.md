@@ -18,34 +18,62 @@ u_{| \Gamma_D} & = 0 \tag{2} \\
 $$
 
 Denote
+
+
+
+
 $$
 A \psi = 2 \mu \psi + \lambda (\text{Tr}(\psi)) I_d ,
 $$
+
+
 and
+
+
 $$
 e(u) = \frac{1}{2} (\nabla u^T + \nabla u) ,
 $$
+
+
 where $\mu$ and $\lambda$ are call Lam$\'e$ parameters and are defined as follow:
+
+
 $$
 \mu = \frac{E}{2(1 + \nu)} \\
 \lambda = \frac{E\nu}{(1+\nu)(1 - 2\nu)}
 $$
- $E$ is [Young's modulus]([https://en.wikipedia.org/wiki/Young%27s_modulus](https://en.wikipedia.org/wiki/Young's_modulus)) which represents for the stiffness of solid material, and $\nu$ is called [Poisson's ratio](https://en.wikipedia.org/wiki/Poisson's_ratio) which explains for the phenomenon where the material extends in perpendicular with respect to direction of the force.  $u$ in the system of equation is the direction for which each particle in the object will move under force $f$ and external force on $g$ some boundary $\Gamma_N$.  In fact, I do not really understand why equation (1) is true, but as far as I know the simulation I run on my computer seems right :). One final note before we are going to construct the weak formulation for this problem is the meaning for the boundary conditions. Dirichlet condition for this type of equations is always set to be 0, which means that boundary is kept fixed, which Neumann condition is the external force apply on the object's edges.
+ 
+
+
+
+$E$ is [Young's modulus]([https://en.wikipedia.org/wiki/Young%27s_modulus](https://en.wikipedia.org/wiki/Young's_modulus)) which represents for the stiffness of solid material, and $\nu$ is called [Poisson's ratio](https://en.wikipedia.org/wiki/Poisson's_ratio) which explains for the phenomenon where the material extends in perpendicular with respect to direction of the force.  $u$ in the system of equation is the direction for which each particle in the object will move under force $f$ and external force on $g$ some boundary $\Gamma_N$.  In fact, I do not really understand why equation (1) is true, but as far as I know the simulation I run on my computer seems right :). One final note before we are going to construct the weak formulation for this problem is the meaning for the boundary conditions. Dirichlet condition for this type of equations is always set to be 0, which means that boundary is kept fixed, which Neumann condition is the external force apply on the object's edges.
 
 
 
 ### How to construct weak solution ?
 
 In finite element method, we want to approximate $u$ by basis functions which are defined over all elements of the domain, i.e
+
+
 $$
 u = \sum_{i = 1}^k \alpha_i \phi_i,
 $$
-where $\phi_i$ is basis function corresponding to element $i$. The reason why we want to construct the original problem in the form of $\alpha(u, v) = L(v)$ (*) is that in this case, finding coefficient $\alpha_i$ is equivalent to solving a system of linear equations. Finding $u$ which satisfies (\*) for every $v$ in the chosen function space (approximated by span {$\phi\_1, \phi\_2, ..., \phi\_k$} is equivalent to finding $u$ which satisfies $\alpha(u, \phi_i) = L(\phi_i)$ for all basis function $phi\_i$. Hence, in its core, we need to solve the following system of equations:
+
+
+
+
+where $\phi_i$ is basis function corresponding to element $i$. The reason why we want to construct the original problem in the form of $\alpha(u, v) = L(v)$ (*) is that in this case, finding coefficient $\alpha_i$ is equivalent to solving a system of linear equations. Finding $u$ which satisfies (\*) for every $v$ in the chosen function space (approximated by span {$\phi\_1, \phi\_2, ..., \phi\_k$} is equivalent to finding $u$ which satisfies $\alpha(u, \phi_i) = L(\phi_i)$ for all basis function $\phi\_i$. Hence, in its core, we need to solve the following system of equations:
+
+
 $$
 \forall i \in \{1, 2, ... , k \} \\
 \sum_{j = 1}^k \alpha_j \alpha(\phi_j, \phi_i) = L(\phi_i)
 $$
+
+
 Now, we turn back to our system of elasticity. Denote $v$ as test function and belongs to $[H^1_0 (\Omega)]^2$ (we are working on  two dimensional case). The space of test function is usually chosen so that it satisfies the Dirichlet boundary condition. Multiply (1) by $v$ and taking integral on domain $\Omega$, we have:
+
+
 $$
 \begin{align}
 \int_{\Omega}-div(Ae(u)) & = \int_{\Omega}fv \\
