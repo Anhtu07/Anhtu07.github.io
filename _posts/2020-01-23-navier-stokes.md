@@ -1,26 +1,32 @@
 ---
 layout: post
-title:  "Elasticity Simulation with FreeFEM"
+title:  "Numerical Solution to Navier-Stokes"
 date:   2020-01-23
 excerpt: "Simple numerical solution to Navier-Stokes"
 sitemap:
-  lastmod: 2020-01-23
+  lastmod: 2020-01-28
 ---
 
 ## The Problem
 
+This is the final post in the series of simulation using Freefem++, where I sum up how to solve Navier-Stokes equations numerically. As mentioned in previous post, I have very limited background in physics, so I cannot fully understand why and how physicist came up with the Navier-Stokes equations for incompressible fluid. Therefore this blog is presented in a mathematical perspective (which basically mean that I agree with everything the physicists said and only do the math and the coding). Now let me formally restate the famous Navier-Stokes equations:
+$$
+\begin{align}
+\rho \left(\frac{\partial u}{\partial t} + (u . \nabla) u \right) - \mu \Delta u + \nabla v & = \rho f \tag{1} \\
+\text{div} & = 0 \tag{2}
+\end{align}
+$$
 
 
+where $u(x, t)$ is velocity of the stream at position $x$ ($x \in \mathcal{R}^2$ or $x \in \mathcal{R}^3$) at time $t$, and $p(x, t)$ is the pressure of the fluid. The Navier-Stokes asks to find $u$ and $v$ which satisfies (1) and (2) with given fluid property $\rho$ (density) , $\mu$ (viscosity) and external force applied on each volume unit $f$.
 
+Note that, since $u$ is vector value function,  (1) is actually short-handed for 2 equations in $\mathcal{R}^2$ (or 3 equations in $\mathcal{R}^3).
 
 ### How to construct weak solution ?
 
 
 $$
-\begin{align}
-\int_{\Omega}-div(Ae(u)) & = \int_{\Omega}fv \\
-\int_{\Omega} Ae(u) : \nabla v & = \int_{\Omega} fv + \int_{\Gamma_N} gv
-\end{align}
+
 $$
 
 
