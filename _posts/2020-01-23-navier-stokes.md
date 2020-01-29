@@ -20,19 +20,14 @@ $$
 
 where $u(x, t)$ is velocity of the stream at position $x$ ($x \in \mathcal{R}^2$ or $x \in \mathcal{R}^3$) at time $t$, and $p(x, t)$ is the pressure of the fluid. The Navier-Stokes asks to find $u$ and $v$ which satisfies (1) and (2) with given fluid property $\rho$ (density) , $\mu$ (viscosity) and external force applied on each volume unit $f$.
 
-Note that, since $u$ is vector value function,  (1) is actually short-handed for 2 equations in $\mathcal{R}^2$ (or 3 equations in $\mathcal{R}^3).
-
-### How to construct weak solution ?
+Note that, since $u$ is vector value function,  (1) is actually short-handed for 2 equations in $\mathcal{R}^2$ (or 3 equations in $\mathcal{R}^3$).
 
 
-$$
-
-$$
 
 
 ### Numerical solution 
 
-
+The following program describe how water flow in a pipe (as shown in the figure) given that at one end the velocity of the water is kept at constant, there is some round-shaped obstacle within the pipe and the stream at the other end is allowed to move freely.  The mysterious epsilon in the weak equations is require for the stability.
 
 ```c++
 int n=100;
@@ -91,6 +86,12 @@ plot(psi, ps="streamline.jpg");
 ```
 
 ![Navier Stokes](\img\ns.gif)
+
+Another way to view the flow is through streamlines.  A streamline is a curve whose point has velocity vector tangent to it. Mathematically, streamlines can be define as a function $\psi$ satifsies:
+$$
+u = \left(\frac{\psi}{y}, -\frac{\psi}{x} \right)^T
+$$
+
 
 ![Navier Stokes](\img\streamline.jpg)
 
