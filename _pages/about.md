@@ -8,7 +8,7 @@ profile:
   align: right
   image: la.jpg
   address: >
-    <p>Room XXX, Duncan Hall</p>
+    <p>Room 2118, Duncan Hall</p>
     <p>Rice University</p>
     <p>Houston, Texas</p>
 
