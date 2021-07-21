@@ -1,10 +1,14 @@
 ---
-layout: post
-title:  "Numerical Solution to Navier-Stokes"
+layout: distill
+title:  Numerical Solution to Navier-Stokes
+description: Simple numerical solution to Navier-Stokes using FreeFEM++
 date:   2020-01-23
-excerpt: "Simple numerical solution to Navier-Stokes"
-sitemap:
-  lastmod: 2020-01-28
+
+authors:
+  - name: Tu Anh-Nguyen
+    url: "/"
+    affiliations:
+      name: HUST
 ---
 
 ## The Problem
@@ -18,9 +22,9 @@ $$
 $$
 
 
-where $u(x, t)$ is velocity of the stream at position $x$ ($x \in \mathcal{R}^2$ or $x \in \mathcal{R}^3$) at time $t$, and $p(x, t)$ is the pressure of the fluid. The Navier-Stokes asks to find $u$ and $v$ which satisfies (1) and (2) with given fluid property $\rho$ (density) , $\mu$ (viscosity) and external force applied on each volume unit $f$.
+where $$u(x, t)$$ is velocity of the stream at position $$x$$ ($$x \in \mathcal{R}^2$$ or $$x \in \mathcal{R}^3$$) at time $$t$$, and $$p(x, t)$$ is the pressure of the fluid. The Navier-Stokes asks to find $$u$$ and $v$ which satisfies (1) and (2) with given fluid property $$\rho$$ (density) , $$\mu$$ (viscosity) and external force applied on each volume unit $$f$$.
 
-Note that, since $u$ is vector value function,  (1) is actually short-handed for 2 equations in $\mathcal{R}^2$ (or 3 equations in $\mathcal{R}^3$).
+Note that, since $$u$$ is vector value function,  (1) is actually short-handed for 2 equations in $$\mathcal{R}^2$$ (or 3 equations in $$\mathcal{R}^3$$).
 
 
 
@@ -85,16 +89,26 @@ solve streamlines(psi,phi) =
 plot(psi, ps="streamline.jpg");
 ```
 
-![Navier Stokes](\img\ns.gif)
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-1" src="{{ site.baseurl }}/assets/img/ns.gif">
+    </div>                                                                       
+</div>                                                                           
+<div class="caption">                                                            
+    Navier Stokes
+</div>   
 
-Another way to view the flow is through streamlines.  A streamline is a curve whose point has velocity vector tangent to it. Mathematically, streamlines can be define as a function $\psi$ satifsies:
+Another way to view the flow is through streamlines.  A streamline is a curve whose point has velocity vector tangent to it. Mathematically, streamlines can be define as a function $$\psi$$ satifsies:
 $$
 u = \left(\frac{\psi}{y}, -\frac{\psi}{x} \right)^T
 $$
 
 
-![Navier Stokes](\img\streamline.jpg)
-
-
-
-
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-1" src="{{ site.baseurl }}/assets/img/streamline.jpg">
+    </div>                                                                       
+</div>                                                                           
+<div class="caption">                                                            
+    Navier Stokes Streamline
+</div> 

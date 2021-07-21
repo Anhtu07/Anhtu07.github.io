@@ -1,9 +1,14 @@
 ---
-layout: post
-title:  "Polynomial Algorithm for Minimum Dominating Set in Some Family of Graphs"
+layout: distill
+title:  Polynomial Algorithm for Minimum Dominating Set in Some Family of Graphs
 date:   2019-05-31
-excerpt: "This post present proof and techniques for finding minimum dominating set in some families of graphs"
-image: "/images/prob_model.png"
+description: This post present proof and techniques for finding minimum dominating set in some families of graphs.
+
+authors:
+  - name: Tu Anh-Nguyen
+    url: "/"
+    affiliations:
+      name: HUST
 ---
 
 ## The Problem
@@ -14,39 +19,15 @@ Most algorithm used in applications can only return a good approximation of the 
 
 Studying how to arrive at a good approximation and where the number $1.4969$ comes from are interesting. I hope to cover these topics in the future. But in this post, I want to tackle a different question related to MDS problem: On what case the MDS problem can be solved in polynomial time? This question, is, of course, not without basis. It based on a huge amount of work on the independent set. In literature, finding maximum independent set (MIS) problem is proved to have efficient algorithm (polynomial time) in many families of graph using a technique named augmenting set. Since dominating and independent set are closely related, a simple idea is to inherit the augmenting method for MDS problem. Because the general idea is we want to find a subgraph that can reduce the number of vertices in the dominating set after each iterative step, I named it reducing set. 
 
-This newly developed technique can be applied to solve two open problems: MDS in $(fork, \overline{P_5})$-free and $(claw, P_5)$-free graph. For references, visit [here](http://www.graphclasses.org/classes/problem_Domination.html). Let $F$ be a set of graph, a graph $G$ is called $F$-free if $G$ do not have any induced subgraph contained in $F$. The rest of this blog, I will try to describe the general idea of how to solve these two problem and avoid going through too much proof. Extensive readers can access to my [paper](/docs/Polynomial_Algorithm_for_Minimum_Dominating_Set.pdf) for more details.
+This newly developed technique can be applied to solve two open problems: MDS in $(fork, \overline{P_5})$-free and $(claw, P_5)$-free graph. For references, visit [here](http://www.graphclasses.org/classes/problem_Domination.html). Let $F$ be a set of graph, a graph $G$ is called $F$-free if $G$ do not have any induced subgraph contained in $F$. The rest of this blog, I will try to describe the general idea of how to solve these two problem and avoid going through too much proof. Extensive readers can access to my [paper](/assets/pdf/Polynomial_Algorithm_for_Minimum_Dominating_Set.pdf) for more details.
 
-<script type="text/tikz"> 
-\begin{tikzpicture}
-\draw[fill=black] (0,1) circle (3pt);
-\draw[fill=black] (1,0) circle (3pt);
-\draw[fill=black] (2,1) circle (3pt);
-\draw[fill=black] (1,-1) circle (3pt) node[below]{claw};
-\draw[thick] (0,1)--(1,0)--(2,1) -- (1,0)--(1,-1);
-
-\draw[fill=black] (3,1) circle (3pt);
-\draw[fill=black] (4,0) circle (3pt);
-\draw[fill=black] (5,1) circle (3pt);
-\draw[fill=black] (4,-1) circle (3pt);
-\draw[fill=black] (4,-2) circle (3pt) node[below]{fork};
-\draw[thick] (3,1)--(4,0)--(5,1)--(4,0)--(4,-1)--(4,-2);
-
-\draw[fill=black] (6,1) circle (3pt);
-\draw[fill=black] (7,0) circle (3pt);
-\draw[fill=black] (8,1) circle (3pt);
-\draw[fill=black] (7,-1) circle (3pt);
-\draw[fill=black] (7,-2) circle (3pt) node[below]{\(\bar{P_5}\)};
-\draw[thick] (7,0)--(8,1)--(6,1)--(7,0)--(7,-1)--(7,-2);
-
-\draw[fill=black] (9,0) circle (3pt);
-\draw[fill=black] (10.5,0) circle (3pt);
-\draw[fill=black] (12,0) circle (3pt) node[below]{\(P_5\)};
-\draw[fill=black] (13.5,0) circle (3pt);
-\draw[fill=black] (15,0) circle (3pt);
-\draw[thick] (9,0)--(15,0);
-\end{tikzpicture}
-</script>
-
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-0" src="{{ site.baseurl }}/assets/img/graphs.png">
+    </div>
+</div>
+<div class="caption">
+</div>
 
 ### $(fork, \overline{P_5})$-free Graphs
 In this section, for convinient, every graphs are $(fork, \overline{P_5})$-free. My first idea for this problem is we first start with an minimal dominating set. This set will contains many maximal connected components. If this set is not minimum, then of course, exists other sets with smaller cardinality. My intuition is we can replace components of the current DS by other components to obtain smaller one. Thinking in this direction, I want to know the characteristic of a components in a minimal dominating set.

@@ -1,10 +1,14 @@
 ---
-layout: post
-title:  "Elasticity Simulation with FreeFEM"
+layout: distill
+title:  Elasticity Simulation with FreeFEM
 date:   2020-01-18
-excerpt: "Analyzing a simple system of elastic equations"
-sitemap:
-  lastmod: 2020-01-18
+excerpt: Analyzing a simple system of elastic equations
+
+authors:
+  - name: Tu Anh-Nguyen
+    url: "/"
+    affiliations:
+      name: HUST
 ---
 
 ## The Problem
@@ -19,24 +23,17 @@ $$
 
 Denote
 
-
-
-
 $$
 A \psi = 2 \mu \psi + \lambda (\text{Tr}(\psi)) I_d ,
 $$
 
-
 and
-
 
 $$
 e(u) = \frac{1}{2} (\nabla u^T + \nabla u) ,
 $$
 
-
 where $\mu$ and $\lambda$ are call Lam$\'e$ parameters and are defined as follow:
-
 
 $$
 \mu = \frac{E}{2(1 + \nu)} \\
@@ -130,10 +127,12 @@ plot(Th, ps="./elastic simulation/sol_"+count+".jpg");
 }
 ```
 
-![Heat Simulation](\img\elastic-simulation.gif)
-
-
-
-
-
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-0" src="{{ site.baseurl }}/assets/img/elastic-simulation.gif">
+    </div>                                                                       
+</div>                                                                           
+<div class="caption">                                                            
+Elastic simulation result
+</div>    
 

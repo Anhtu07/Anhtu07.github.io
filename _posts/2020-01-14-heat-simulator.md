@@ -1,10 +1,14 @@
 ---
-layout: post
-title:  "Heat Simulation with FreeFEM"
+layout: distill
+title:  Heat Simulation with FreeFEM
 date:   2020-01-14
-excerpt: "Analyzing a simple heat simulation problem"
-sitemap:
-  lastmod: 2020-01-16
+description: Analyzing a simple heat simulation problem
+
+authors:
+  - name: Tu Anh-Nguyen
+    url: "/"
+    affiliations:
+      name: HUST
 ---
 
 ## The Problem
@@ -95,7 +99,14 @@ for (t = 1; t <= T/dt; t ++) {
 }
 ```
 
-![Heat Simulation](\img\heat-simulation.gif)
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-0" src="{{ site.baseurl }}/assets/img/heat-simulation.gif">
+    </div>                                                                       
+</div>                                                                           
+<div class="caption">                                                            
+    Heat Simulation
+</div>    
 
 
 

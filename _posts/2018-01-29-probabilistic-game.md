@@ -1,9 +1,14 @@
 ---
-layout: post
-title:  "Solving a Probabilistic Problem"
+layout: distill
+title:  Solving a Probabilistic Problem
 date:   2018-01-29
-excerpt: "This article presents the algebraic proof and method for solving a two-gamers problem"
-image: "/images/prob_model.png"
+description: This article presents the algebraic proof and method for solving a two-players problem.
+
+authors:
+  - name: Tu Anh-Nguyen
+    url: "/"
+    affiliations:
+      name: HUST
 ---
 
 ## The Problem
@@ -60,16 +65,20 @@ $$h_i = \sum_{j \in I} p_{ij} h_j $$
 To this point, we have proven that $$h = (h_i)_{i \in I}$$ is a solution of system $\ast$. Now we will prove that $h$ is the smallest solution of $\ast$. Suppose $$x = (x_i)_{i \in I}$$ is a non-negative solution of $\ast$. Clearly, $x_{a+b} = 1$. With $i \neq a+b$, we have
 
 $$
-x_i = \sum_{j \in I} p_{ij}x_j =  p_{i, a+b} + \sum_{j \neq a+b} p_{ij}x_j \\
-= p_{i, a+b} + \sum_{j \neq a+b} p_{ij} (p_{j, a+b} + \sum_{r \neq a+b } p_{jr}x_r) \\
-= P_i(X_1 = a+b) + P(X_1 \neq a+b, X_2 = a+b) + \sum_{j \neq a+b} \sum_{r \neq a+b} p_{ij}p_{jr}x_r
+\begin{align*}
+x_i &= \sum_{j \in I} p_{ij}x_j =  p_{i, a+b} + \sum_{j \neq a+b} p_{ij}x_j \\
+&= p_{i, a+b} + \sum_{j \neq a+b} p_{ij} (p_{j, a+b} + \sum_{r \neq a+b } p_{jr}x_r) \\
+&= P_i(X_1 = a+b) + P(X_1 \neq a+b, X_2 = a+b) + \sum_{j \neq a+b} \sum_{r \neq a+b} p_{ij}p_{jr}x_r
+\end{align*}
 $$
 
 If we continue to expand $x_r$ as above, we can derive that
 
 $$
-P_i(X_1 = a+b) + ... + P_i(X_1 \neq a+b, X_2 \neq a+b, ... X_n = a+b) + \sum_{j_1 \neq a+b} ... \sum_{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn} \\
+\begin{align*}
+P_i(X_1 = a+b) + ... + P_i(X_1 \neq a+b, X_2 \neq a+b, ... X_n = a+b) \\ + \sum_{j_1 \neq a+b} ... \sum_{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn} \\
 = P_i(H \le n) + \sum_{j_1 \neq a+b} ... \sum{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn}
+\end{align*}
 $$
 
 The "bunch of sum" in the above formula is used for nothing but it is greater than $0$. $$x_i > P_i(H \le n) \forall n$$. So $$x_i \geq h_i \forall i \in I$$.
@@ -138,24 +147,4 @@ k_i = 1 + \sum{j \neq a+b} p_{ij} k_j \ when \ i \neq {a+b}
 \right.
 $$
 
-Last words, this problem can be generalized into the problem [Markov Chain](https://en.wikipedia.org/wiki/Markov_chain) reaching its [Absorbing State](https://en.wikipedia.org/wiki/Absorbing_Markov_chain)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Last words, this problem can be generalized into the problem [Markov Chain](https://en.wikipedia.org/wiki/Markov_chain) reaching its [Absorbing State](https://en.wikipedia.org/wiki/Absorbing_Markov_chain).
