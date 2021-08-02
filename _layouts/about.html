@@ -7,6 +7,7 @@ layout: default
   <header class="post-header">
     <h1 class="post-title">
      {% if site.title == "blank" %}<span class="font-weight-bold">{{ site.first_name }}</span> {{ site.middle_name }} {{ site.last_name }}{% else %}{{ site.title }}{% endif %}
+    {% include social.html %}
     </h1>
      <p class="desc">{{ page.description }}</p>
   </header>
@@ -41,14 +42,6 @@ layout: default
       {% include awards.html %}
     {% endif %}
 
-    {% if page.social %}
-    <div class="social">
-      <div class="contact-icons">
-        {% include social.html %}
-      </div>
-      <div class="contact-note">{{ site.contact_note }}</div>
-    </div>
-    {% endif %}
   </article>
 
 </div>
