@@ -28,4 +28,4 @@ My undergraduate thesis studied the minimum dominating set problem in graph theo
 Download my [CV](/assets/pdf/cv.pdf).
 
 My research goal is to understand and develop principles from the discrete optimization point of view to applications in large-scale data science and machine learning.
-Currently, I am working on Mixed-Integer Formulations for neural networks verification.
+Currently, I am working on integer value function learning and mixed-integer formulations for neural networks verification.
