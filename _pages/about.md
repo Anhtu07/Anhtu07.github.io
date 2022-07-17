@@ -20,7 +20,7 @@ social: true  # includes social icons at the bottom of the page
 
 I am a PhD candidate at Rice CAAM.
 My research interests include discrete optimization, graph theory, and mathematical foundations for machine learning.
-I am extremely fortunate to be advised by Dr. [Joey Huchette](http://www.joehuchette.com/).
+I am extremely fortunate to be advised by Dr. [Andrew J. Schaefer](https://www.caam.rice.edu/~andrew.schaefer/) and Dr. [Joey Huchette](http://www.joehuchette.com/).
 Previously, I worked as a research intern on the clustering problem for interaction data at [RIKEN AIP](https://aip.riken.jp/), hosted by Dr. [Tiphaine Viard](https://tiphaineviard.com/).
 I obtained a BEng degree from the Talented Program at [Hanoi University of Science and Technology](https://en.hust.edu.vn/elitech).
 My undergraduate thesis studied the minimum dominating set problem in graph theory.
