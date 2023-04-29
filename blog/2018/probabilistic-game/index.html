@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>
+
+  Tu Anh-Nguyen
+
+
+  | Solving a Probabilistic Problem
+
+</title>
+<meta name="description" content="Tu's personal website.
+">
+
+<!-- Open Graph -->
+
+
+<!-- Bootstrap & MDB -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" integrity="sha512-RO38pBRxYH3SoOprtPTD86JFOclM51/XTIdEPh5j8sj4tp8jmQIx26twG52UaLi//hQldfrh7e51WzP9wuP32Q==" crossorigin="anonymous" />
+
+<!-- Fonts & Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"  integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.0/css/academicons.min.css" integrity="sha512-W4yqoT1+8NLkinBLBZko+dFB2ZbHsYLDdr50VElllRcNt2Q4/GSs6u71UHKxB7S6JEMCp5Ve4xjh3eGQl/HRvg==" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+<!-- Code Syntax Highlighting -->
+<link rel="stylesheet" href="/assets/css/github.css" />
+
+<!-- Styles -->
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="canonical" href="/blog/2018/probabilistic-game/">
+
+<!-- JQuery -->
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+
+<!-- Theming-->
+
+
+
+
+
+
+    
+<!-- MathJax -->
+<script type="text/javascript">
+  window.MathJax = {
+    tex: {
+      tags: 'ams'
+    }
+  };
+</script>
+<script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js"></script>
+<script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+    <script src="/assets/js/distillpub/template.v2.js"></script>
+    <script src="/assets/js/distillpub/transforms.v2.js"></script>
+    <script src="/assets/js/distillpub/overrides.js"></script>
+    
+  </head>
+
+  <d-front-matter>
+    <script async type="text/json">{
+      "title": "Solving a Probabilistic Problem",
+      "description": "This article presents the algebraic proof and method for solving a two-players problem.",
+      "published": "January 29, 2018",
+      "authors": [
+        
+        {
+          "author": "Tu Anh-Nguyen",
+          "authorURL": "/",
+          "affiliations": [
+            {
+              "name": "HUST",
+              "url": ""
+            }
+          ]
+        }
+        
+      ],
+      "katex": {
+        "delimiters": [
+          {
+            "left": "$",
+            "right": "$",
+            "display": false
+          },
+          {
+            "left": "$$",
+            "right": "$$",
+            "display": true
+          }
+        ]
+      }
+    }</script>
+  </d-front-matter>
+
+  <body class="fixed-top-nav sticky-bottom-footer">
+
+    <!-- Header -->
+
+    <header>
+
+    <!-- Nav Bar -->
+    <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+    <div class="container">
+      
+      <a class="navbar-brand title font-weight-lighter" href="https://tu-na.org/">
+       Tu Anh-Nguyen
+      </a>
+      
+      <!-- Navbar Toggle -->
+      <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar top-bar"></span>
+        <span class="icon-bar middle-bar"></span>
+        <span class="icon-bar bottom-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse text-right" id="navbarNav">
+        <ul class="navbar-nav ml-auto flex-nowrap">
+          <!-- About -->
+          <li class="nav-item ">
+            <a class="nav-link" href="/">
+              about
+              
+            </a>
+          </li>
+          
+          <!-- Blog -->
+          <li class="nav-item active">
+            <a class="nav-link" href="/blog/">
+              blog
+              
+            </a>
+          </li>
+          
+          <!-- Other pages -->
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="nav-item ">
+              <a class="nav-link" href="/publications/">
+                publications
+                
+              </a>
+          </li>
+          
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+</header>
+
+
+    <!-- Content -->
+
+    <div class="post distill">
+
+      <d-title>
+        <h1>Solving a Probabilistic Problem</h1>
+        <p>This article presents the algebraic proof and method for solving a two-players problem.</p>
+      </d-title>
+
+      <d-byline></d-byline>
+
+      <d-article>
+        <h2 id="the-problem">The Problem</h2>
+
+<p>Suppose there are two players A and B. A owns $a$ dollars, while B owns $b$ dollars ($a, b \in \mathbb{N}$). Each turn of play, A has $p$ chance of winning and $q = 1-p$ chance of losing. if A win, he gets a dollar; if he loses, he lose one dollar. The game end when either of players is out of money. The question is what probability A will win (A gets $a+b$ dollar) or A will lose (A has 0 dollars).</p>
+
+<h2 id="the-model">The Model</h2>
+
+<p>This problem can be easily put into a mathematical model as follows. Let ${X_n}%_$ be a random variable sequence such that $X_i$ is the money that A owns at $i^{th}$ turn of the game. We can easily obtain the transition matrix $P$:</p>
+
+\[\begin{bmatrix} 
+1 &amp; 0 &amp; 0 &amp; \dots &amp; 0 \\ 
+q &amp; 0 &amp; p &amp; \dots &amp; 0 \\
+0 &amp; q &amp; 0 &amp; \dots &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; 0 &amp; \dots &amp; 1 
+\end{bmatrix}\]
+
+<p>$X_i$ can be a element of the set $I = $ {$1,2,3,.., a+b$} and $p_{ij}$ is the probability that state $X_i$ will go to state $X_j$.</p>
+
+<h2 id="the-notation">The Notation</h2>
+<p>We only need to find the probability that starting $a$ dollars, A will end up at having $a+b$ dollars after some turn (the other case is similiar). Let H equal inf {$n \geq 0 | X_n = a+b$}, this definition also means that $H$ is a random variable .Let define $h_i$ as follow $ h_i = P(H &lt; \infty | X_0 = iv) $</p>
+
+<h2 id="the-theorem">The Theorem</h2>
+<p>The set of $h_i$ with $i = \overline{1,a+b}$ is the non-negative smallest solution of the following system</p>
+
+\[\left\{
+\begin{array}{l}
+h_i = 1 \ \ \ \ \ \ \ \ \ \ \ \ \ \ when \ i = a+b \\
+h_i = \sum_{j \in I} p_{ij} h_j \ when \ i \neq a+b
+\end{array}
+\right.
+\ \ \ \ \ \ \ (\ast)\]
+
+<p>The smallest solution here means that if $x$ is also non-negetive solution of the system $*$ then $x_i \geq h_i \forall i \in I$</p>
+
+<h3 id="proof">Proof</h3>
+<p>We first prove that $h = (h_i)_{i \in I}$ is a solution of *.
+If $i = a+b$ then</p>
+
+\[h_i = P(H &lt; \infty | X_0 = a+b) = P(0 &lt; \infty | x_0 = a+b) = 1\]
+
+<p>If $i \neq a+b$ then</p>
+
+\[h_i = P(H &lt; \infty | X_0 = i) = \sum_{j \in I} P(H &lt; \infty | X_1 = j) \cdot P(X_i = j | X_0 = i)\]
+
+<p>Since \(P(H &lt; \infty \mid X_1 = j) = P(H &lt; \infty \mid X_0 = j) = h_j\). We conclude that</p>
+
+\[h_i = \sum_{j \in I} p_{ij} h_j\]
+
+<p>To this point, we have proven that \(h = (h_i)_{i \in I}\) is a solution of system $\ast$. Now we will prove that $h$ is the smallest solution of $\ast$. Suppose \(x = (x_i)_{i \in I}\) is a non-negative solution of $\ast$. Clearly, $x_{a+b} = 1$. With $i \neq a+b$, we have</p>
+
+\[\begin{align*}
+x_i &amp;= \sum_{j \in I} p_{ij}x_j =  p_{i, a+b} + \sum_{j \neq a+b} p_{ij}x_j \\
+&amp;= p_{i, a+b} + \sum_{j \neq a+b} p_{ij} (p_{j, a+b} + \sum_{r \neq a+b } p_{jr}x_r) \\
+&amp;= P_i(X_1 = a+b) + P(X_1 \neq a+b, X_2 = a+b) + \sum_{j \neq a+b} \sum_{r \neq a+b} p_{ij}p_{jr}x_r
+\end{align*}\]
+
+<p>If we continue to expand $x_r$ as above, we can derive that</p>
+
+\[\begin{align*}
+P_i(X_1 = a+b) + ... + P_i(X_1 \neq a+b, X_2 \neq a+b, ... X_n = a+b) \\ + \sum_{j_1 \neq a+b} ... \sum_{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn} \\
+= P_i(H \le n) + \sum_{j_1 \neq a+b} ... \sum{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn}
+\end{align*}\]
+
+<p>The “bunch of sum” in the above formula is used for nothing but it is greater than $0$. \(x_i &gt; P_i(H \le n) \forall n\). So \(x_i \geq h_i \forall i \in I\).</p>
+
+<p>In conclusion, $h$ is is the non-negative smallest solution of the system *</p>
+
+<h3 id="the-formula">The Formula</h3>
+
+<p>Back to our original problem, to calculate the chance of A wins starting from $a$ dollars is to find $h_a$ in the above system. By the above theorem, we need to solve the following system</p>
+
+\[\left\{
+\begin{array}{l}
+h_0 = 0 \\
+h_{a+b} = 1 \\
+h_i = q h_{i-1} + p h_{i + 1} \forall i = \overline{1, a+b-1}
+\end{array}
+\right.\]
+
+<p>we rewrite our recursive formula as $h_{i+1} = \frac{1}{p} h_i - \frac{q}{p} h_{i+1}$. From this we can derive our characteristic polynomial</p>
+
+\[x^2 - \frac{1}{p} x + \frac{q}{p}\]
+
+<p>We have two solution of the characteristic polynomial is</p>
+
+\[x_{1,2} = \frac{\frac{1}{p} \pm \sqrt{\frac{1}{p^2} - 4\frac{q}{p}}}{2} = \frac{\frac{1}{p} \pm \sqrt{\frac{1}{p^2} - 4\frac{1}{p} + 4}}{2} = \frac{\frac{1}{p} \pm \left\lvert\frac{1}{p}-2\right\lvert}{2}\]
+
+<p>In this problems, $p = 0$ or $1$ is trivial since if so, A will always lose or win at every turn. Therefore we will only consider $p, q \neq 0, 1$.</p>
+
+<p>If $p \neq q \neq \frac{1}{2}$ then the above characteristic polynomial has exactly two distinct solution. However we need not to consider which one of {$p, q$} is greater than $\frac{1}{2}$ because in both case, the polynomial has two solution $1$ and $\frac{q}{p}$. Our general formula will have the form</p>
+
+\[h_n = c_1 (\frac{q}{p})^n + c_2\]
+
+<p>where $C_1$ and $c_2$ is two real constant satifying the initial conditions</p>
+
+\[\left\{
+\begin{array}{l}
+h_0 = c_1 + c_2 = 0 \\
+h_{a+b} = c_1 (\frac{q}{p})^{a+b} + c_2 = 1 \\
+\end{array}
+\right.\]
+
+<p>Solving this equation, we easily obtain that $c_1 = \frac{-1}{1-(\frac{q}{p})^{a+b}}$ and $c_2 = \frac{1}{1-(\frac{q}{p})^{a+b}}$. Substitute $c_1$ and $c_2$ in our general formula</p>
+
+\[h_n = \frac{1 - (\frac{q}{p})^n}{1-(\frac{q}{p})^{a+b}}\]
+
+<p>This means that, the chance of winning for A will be $h_a = \frac{1 - (\frac{q}{p})^a}{1-(\frac{q}{p})^{a+b}}$</p>
+
+<p>Finally, in case $p = q = \frac{1}{2}$, $h_a = \frac{a}{a+b}$</p>
+
+<h3 id="example">Example</h3>
+<p>Let consider a actual games where both A and B has 500 dollars. If both A and B has equally 50-50 chance of gaining money each turn, then from the above formula they have 50% chance of winning the whole game. However, if we just slightly favor A, giving him 0.502 chance of winning each turn, then surprisingly A will have approximately 99% of winning the whole game.</p>
+
+<p>Despite the high winning chance, a simple simulation of the game shows that it takes A millions of steps to win the whole game. Now, we may ask what the expected number of step of the game. In fact, we can easily construct a system that solves the expection of number of step similiar to system that solves the probability. Let $k_a = E(H \mid X_0 = a)$ then</p>
+
+\[\left\{
+\begin{array}{l}
+k_{a+b} = 0 \\
+k_i = 1 + \sum{j \neq a+b} p_{ij} k_j \ when \ i \neq {a+b}
+\end{array}
+\right.\]
+
+<p>Last words, this problem can be generalized into the problem <a href="https://en.wikipedia.org/wiki/Markov_chain">Markov Chain</a> reaching its <a href="https://en.wikipedia.org/wiki/Absorbing_Markov_chain">Absorbing State</a>.</p>
+
+      </d-article>
+
+      <d-appendix>
+        <d-footnote-list></d-footnote-list>
+        <d-citation-list></d-citation-list>
+      </d-appendix>
+
+    </div>
+
+    <!-- Footer -->
+
+    
+<footer class="sticky-bottom mt-5">
+  <div class="container">
+    &copy; Copyright 2023 Tu Anh Nguyen.
+    
+    
+    
+    Last updated: April 29, 2023.
+    
+  </div>
+</footer>
+
+
+
+  </body>
+
+  <d-bibliography src="/assets/bibliography/">
+  </d-bibliography>
+
+</html>

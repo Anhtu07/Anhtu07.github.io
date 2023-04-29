@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://tu-na.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://tu-na.org/" rel="alternate" type="text/html" /><updated>2023-04-29T19:47:28+09:00</updated><id>https://tu-na.org/feed.xml</id><title type="html">Tu Anh-Nguyen</title><subtitle>Tu&apos;s personal website.
+</subtitle><entry><title type="html">Numerical Solution to Navier-Stokes</title><link href="https://tu-na.org/blog/2020/navier-stokes/" rel="alternate" type="text/html" title="Numerical Solution to Navier-Stokes" /><published>2020-01-23T00:00:00+09:00</published><updated>2020-01-23T00:00:00+09:00</updated><id>https://tu-na.org/blog/2020/navier-stokes</id><content type="html" xml:base="https://tu-na.org/blog/2020/navier-stokes/"><![CDATA[<h2 id="the-problem">The Problem</h2>
+
+<p>This is the final post in the series of simulation using Freefem++, where I sum up how to solve Navier-Stokes equations numerically. As mentioned in previous post, I have very limited background in physics, so I cannot fully understand why and how physicist came up with the Navier-Stokes equations for incompressible fluid. Therefore this blog is presented in a mathematical perspective (which basically mean that I agree with everything the physicists said and only do the math and the coding). Now let me formally restate the famous Navier-Stokes equations:
+\(\begin{align}
+\rho \left(\frac{\partial u}{\partial t} + (u . \nabla) u \right) - \mu \Delta u + \nabla v &amp; = \rho f \tag{1} \\
+\text{div} &amp; = 0 \tag{2}
+\end{align}\)</p>
+
+<p>where \(u(x, t)\) is velocity of the stream at position \(x\) (\(x \in \mathcal{R}^2\) or \(x \in \mathcal{R}^3\)) at time \(t\), and \(p(x, t)\) is the pressure of the fluid. The Navier-Stokes asks to find \(u\) and $v$ which satisfies (1) and (2) with given fluid property \(\rho\) (density) , \(\mu\) (viscosity) and external force applied on each volume unit \(f\).</p>
+
+<p>Note that, since \(u\) is vector value function,  (1) is actually short-handed for 2 equations in \(\mathcal{R}^2\) (or 3 equations in \(\mathcal{R}^3\)).</p>
+
+<h3 id="numerical-solution">Numerical solution</h3>
+
+<p>The following program describe how water flow in a pipe (as shown in the figure) given that at one end the velocity of the water is kept at constant, there is some round-shaped obstacle within the pipe and the stream at the other end is allowed to move freely.  The mysterious epsilon in the weak equations is require for the stability.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">;</span>
+<span class="n">real</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">real</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.01</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">border</span> <span class="nf">s1</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="mi">20</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="n">t</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">1</span><span class="p">;};</span>
+<span class="n">border</span> <span class="nf">s2</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="mi">20</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="n">t</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">2</span><span class="p">;};</span>
+<span class="n">border</span> <span class="nf">s3</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="n">t</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">1</span><span class="p">;};</span>
+<span class="n">border</span> <span class="nf">s4</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="n">t</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">3</span><span class="p">;};</span>
+<span class="n">border</span> <span class="nf">s5</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="n">t</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">1</span><span class="p">;};</span>
+<span class="n">border</span> <span class="nf">s6</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="n">t</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">1</span><span class="p">;};</span>
+
+<span class="n">border</span> <span class="nf">c</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">){</span><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">+</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">);</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">+</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">);}</span>
+<span class="n">mesh</span> <span class="n">Th</span><span class="o">=</span> <span class="n">buildmesh</span> <span class="p">(</span><span class="n">s1</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="n">s2</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="n">s3</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="n">s4</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="n">s5</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="n">s6</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="n">c</span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="p">));</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">Th</span><span class="p">);</span>
+
+<span class="n">fespace</span> <span class="nf">Uh</span><span class="p">(</span><span class="n">Th</span><span class="p">,</span><span class="n">P1b</span><span class="p">);</span> 
+	<span class="n">Uh</span> <span class="n">u1</span><span class="p">,</span><span class="n">u2</span><span class="p">,</span><span class="n">v1</span><span class="p">,</span><span class="n">v2</span><span class="p">,</span><span class="n">u1old</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">u2old</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+	<span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">;</span>
+<span class="n">fespace</span> <span class="nf">Ph</span><span class="p">(</span><span class="n">Th</span><span class="p">,</span><span class="n">P1</span><span class="p">);</span>
+	<span class="n">Ph</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">;</span>
+
+<span class="n">real</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">;</span>
+<span class="n">real</span> <span class="n">mu</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">;</span>
+<span class="n">f1</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">f2</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">real</span> <span class="n">alpha</span> <span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="n">dt</span><span class="p">;</span>
+
+<span class="n">solve</span> <span class="nf">stokes</span><span class="p">([</span><span class="n">u1</span><span class="p">,</span><span class="n">u2</span><span class="p">,</span><span class="n">p</span><span class="p">],[</span><span class="n">v1</span><span class="p">,</span><span class="n">v2</span><span class="p">,</span><span class="n">q</span><span class="p">])</span><span class="o">=</span>
+	<span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)((</span><span class="n">u1</span><span class="o">*</span><span class="n">v1</span><span class="o">+</span><span class="n">u2</span><span class="o">*</span><span class="n">v2</span><span class="p">)</span><span class="o">*</span><span class="n">alpha</span><span class="p">)</span>
+	<span class="o">+</span><span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span><span class="n">mu</span><span class="o">*</span><span class="p">(</span><span class="n">dx</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span><span class="o">+</span><span class="n">dy</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span><span class="o">*</span><span class="n">dy</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span><span class="o">+</span><span class="n">dx</span><span class="p">(</span><span class="n">u2</span><span class="p">)</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span><span class="o">+</span><span class="n">dy</span><span class="p">(</span><span class="n">u2</span><span class="p">)</span><span class="o">*</span><span class="n">dy</span><span class="p">(</span><span class="n">v2</span><span class="p">)))</span>
+	<span class="o">-</span><span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span><span class="n">p</span><span class="o">*</span><span class="p">(</span><span class="n">dx</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span><span class="o">+</span><span class="n">dy</span><span class="p">(</span><span class="n">v2</span><span class="p">)))</span>
+	<span class="o">-</span><span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span><span class="n">f1</span><span class="o">*</span><span class="n">v1</span><span class="o">+</span><span class="n">f2</span><span class="o">*</span><span class="n">v2</span><span class="p">)</span>
+	<span class="o">+</span><span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span><span class="n">q</span><span class="o">*</span><span class="p">(</span><span class="n">dx</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span><span class="o">+</span><span class="n">dy</span><span class="p">(</span><span class="n">u2</span><span class="p">))</span><span class="o">-</span><span class="n">epsilon</span><span class="o">*</span><span class="n">p</span><span class="o">*</span><span class="n">q</span><span class="p">)</span>
+	<span class="o">+</span><span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span><span class="o">-</span><span class="n">alpha</span><span class="o">*</span><span class="n">convect</span><span class="p">([</span><span class="n">u1old</span><span class="p">,</span><span class="n">u2old</span><span class="p">],</span><span class="o">-</span><span class="n">dt</span><span class="p">,</span><span class="n">u1old</span><span class="p">)</span><span class="o">*</span><span class="n">v1</span>
+				<span class="o">-</span><span class="n">alpha</span><span class="o">*</span><span class="n">convect</span><span class="p">([</span><span class="n">u1old</span><span class="p">,</span><span class="n">u2old</span><span class="p">],</span><span class="o">-</span><span class="n">dt</span><span class="p">,</span><span class="n">u2old</span><span class="p">)</span><span class="o">*</span><span class="n">v2</span><span class="p">)</span>
+	<span class="o">+</span><span class="n">on</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">u1</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">u2</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span><span class="n">on</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">u1</span><span class="o">=</span><span class="mf">0.667</span><span class="p">,</span><span class="n">u2</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">on</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">u1</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">T</span><span class="o">/</span><span class="n">dt</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+	<span class="n">count</span><span class="o">++</span><span class="p">;</span>
+	<span class="n">stokes</span><span class="p">;</span>
+	<span class="n">plot</span><span class="p">([</span><span class="n">u1</span><span class="p">,</span><span class="n">u2</span><span class="p">],</span><span class="n">p</span><span class="p">,</span> <span class="n">ps</span><span class="o">=</span><span class="s">"ns_"</span> <span class="o">+</span> <span class="n">count</span> <span class="o">+</span><span class="s">".jpg"</span><span class="p">);</span>
+	<span class="n">u1old</span><span class="o">=</span><span class="n">u1</span><span class="p">;</span>
+	<span class="n">u2old</span><span class="o">=</span><span class="n">u2</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="n">Ph</span> <span class="n">psi</span><span class="p">,</span><span class="n">phi</span><span class="p">;</span>
+<span class="n">solve</span> <span class="nf">streamlines</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">phi</span><span class="p">)</span> <span class="o">=</span>
+	<span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span><span class="n">dx</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span> <span class="o">+</span><span class="n">dy</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">*</span><span class="n">dy</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+	<span class="o">+</span><span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span><span class="o">-</span><span class="n">phi</span><span class="o">*</span><span class="p">(</span><span class="n">dy</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span><span class="o">-</span><span class="n">dx</span><span class="p">(</span><span class="n">u2</span><span class="p">)))</span>
+	<span class="o">+</span><span class="n">on</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">psi</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">ps</span><span class="o">=</span><span class="s">"streamline.jpg"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/ns.gif" />
+    </div>                                                                       
+</div>
+<div class="caption">                                                            
+    Navier Stokes
+</div>
+
+<p>Another way to view the flow is through streamlines.  A streamline is a curve whose point has velocity vector tangent to it. Mathematically, streamlines can be define as a function \(\psi\) satifsies:
+\(u = \left(\frac{\psi}{y}, -\frac{\psi}{x} \right)^T\)</p>
+
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/streamline.jpg" />
+    </div>                                                                       
+</div>
+<div class="caption">                                                            
+    Navier Stokes Streamline
+</div>]]></content><author><name>Tu Anh-Nguyen</name></author><summary type="html"><![CDATA[Simple numerical solution to Navier-Stokes using FreeFEM++]]></summary></entry><entry><title type="html">Elasticity Simulation with FreeFEM</title><link href="https://tu-na.org/blog/2020/elastic-simulator/" rel="alternate" type="text/html" title="Elasticity Simulation with FreeFEM" /><published>2020-01-18T00:00:00+09:00</published><updated>2020-01-18T00:00:00+09:00</updated><id>https://tu-na.org/blog/2020/elastic-simulator</id><content type="html" xml:base="https://tu-na.org/blog/2020/elastic-simulator/"><![CDATA[<h2 id="the-problem">The Problem</h2>
+<p>This blog continues the Finite Element Methods series for some simple physical phenomena simulation. Previously, I have covered the heat equation. In this post, I want to discuss another famous  problem: Elasticity. Concretely, we want to know how object of material deforms under pressure or external force. I will first state the system equation of elasticity before I try to explain what it means (I come from mathematics background, so many concepts in physics appear a little confusing to me)
+\(\begin{align}
+-div(Ae(u)) &amp; = f \tag{1} \\
+u_{| \Gamma_D} &amp; = 0 \tag{2} \\
+(Ae(u)).n_{| \Gamma_N} &amp; = g \tag{3}\\
+\end{align}\)</p>
+
+<p>Denote</p>
+
+\[A \psi = 2 \mu \psi + \lambda (\text{Tr}(\psi)) I_d ,\]
+
+<p>and</p>
+
+\[e(u) = \frac{1}{2} (\nabla u^T + \nabla u) ,\]
+
+<p>where $\mu$ and $\lambda$ are call Lam$'e$ parameters and are defined as follow:</p>
+
+\[\mu = \frac{E}{2(1 + \nu)} \\
+\lambda = \frac{E\nu}{(1+\nu)(1 - 2\nu)}\]
+
+<p>$E$ is <a href="[https://en.wikipedia.org/wiki/Young%27s_modulus](https://en.wikipedia.org/wiki/Young's_modulus)">Young’s modulus</a> which represents for the stiffness of solid material, and $\nu$ is called <a href="https://en.wikipedia.org/wiki/Poisson's_ratio">Poisson’s ratio</a> which explains for the phenomenon where the material extends in perpendicular with respect to direction of the force.  $u$ in the system of equation is the direction for which each particle in the object will move under force $f$ and external force on $g$ some boundary $\Gamma_N$.  In fact, I do not really understand why equation (1) is true, but as far as I know the simulation I run on my computer seems right :). One final note before we are going to construct the weak formulation for this problem is the meaning for the boundary conditions. Dirichlet condition for this type of equations is always set to be 0, which means that boundary is kept fixed, which Neumann condition is the external force apply on the object’s edges.</p>
+
+<h3 id="how-to-construct-weak-solution-">How to construct weak solution ?</h3>
+
+<p>In finite element method, we want to approximate $u$ by basis functions which are defined over all elements of the domain, i.e</p>
+
+\[u = \sum_{i = 1}^k \alpha_i \phi_i,\]
+
+<p>where $\phi_i$ is basis function corresponding to element $i$. The reason why we want to construct the original problem in the form of $\alpha(u, v) = L(v)$ (*) is that in this case, finding coefficient $\alpha_i$ is equivalent to solving a system of linear equations. Finding $u$ which satisfies (*) for every $v$ in the chosen function space (approximated by span {$\phi_1, \phi_2, …, \phi_k$} is equivalent to finding $u$ which satisfies $\alpha(u, \phi_i) = L(\phi_i)$ for all basis function $\phi_i$. Hence, in its core, we need to solve the following system of equations:</p>
+
+\[\forall i \in \{1, 2, ... , k \} \\
+\sum_{j = 1}^k \alpha_j \alpha(\phi_j, \phi_i) = L(\phi_i)\]
+
+<p>Now, we turn back to our system of elasticity. Denote $v$ as test function and belongs to $[H^1_0 (\Omega)]^2$ (we are working on  two dimensional case). The space of test function is usually chosen so that it satisfies the Dirichlet boundary condition. Multiply (1) by $v$ and taking integral on domain $\Omega$, we have:</p>
+
+\[\begin{align}
+\int_{\Omega}-div(Ae(u)) &amp; = \int_{\Omega}fv \\
+\int_{\Omega} Ae(u) : \nabla v &amp; = \int_{\Omega} fv + \int_{\Gamma_N} gv
+\end{align}\]
+
+<h3 id="numerical-solution">Numerical solution</h3>
+
+<p>The following code is to simulate how a elliptic shape deform under gravity.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">real</span> <span class="n">E</span> <span class="o">=</span> <span class="mf">21e5</span><span class="p">;</span>
+<span class="n">real</span> <span class="n">nu</span> <span class="o">=</span> <span class="mf">0.28</span><span class="p">;</span>
+<span class="n">real</span> <span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e4</span><span class="p">;</span>
+ <span class="c1">// Mesh</span>
+<span class="n">border</span> <span class="nf">C1</span><span class="p">(</span><span class="n">t</span> <span class="o">=</span> <span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">){</span><span class="n">x</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">);</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">);}</span>
+<span class="n">border</span> <span class="nf">C2</span><span class="p">(</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">){</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="n">t</span><span class="p">;</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;}</span>
+<span class="n">border</span> <span class="nf">C3</span><span class="p">(</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pi</span><span class="p">){</span><span class="n">x</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">);</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">);}</span>
+<span class="n">border</span> <span class="nf">C4</span><span class="p">(</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">){</span><span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">+</span><span class="n">t</span><span class="p">;</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;}</span>
+<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">mesh</span> <span class="n">Th</span> <span class="o">=</span> <span class="n">buildmesh</span><span class="p">(</span><span class="n">C1</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C2</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C3</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C4</span><span class="p">(</span><span class="n">n</span><span class="p">));</span>
+
+<span class="n">plot</span><span class="p">(</span><span class="n">Th</span><span class="p">);</span>
+ <span class="c1">// Fespace</span>
+<span class="n">fespace</span> <span class="nf">Vh</span><span class="p">(</span><span class="n">Th</span><span class="p">,</span> <span class="n">P2</span><span class="p">);</span>
+<span class="n">Vh</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">;</span>
+<span class="n">Vh</span> <span class="n">uu</span><span class="p">,</span> <span class="n">vv</span><span class="p">;</span>
+
+ <span class="c1">// Macro</span>
+<span class="n">real</span> <span class="n">sqrt2</span><span class="o">=</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span><span class="p">);</span>
+<span class="n">macro</span> <span class="nf">epsilon</span><span class="p">(</span><span class="n">u1</span><span class="p">,</span><span class="n">u2</span><span class="p">)</span> <span class="p">[</span><span class="n">dx</span><span class="p">(</span><span class="n">u1</span><span class="p">),</span><span class="n">dy</span><span class="p">(</span><span class="n">u2</span><span class="p">),(</span><span class="n">dy</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span><span class="o">+</span><span class="n">dx</span><span class="p">(</span><span class="n">u2</span><span class="p">))</span><span class="o">/</span><span class="n">sqrt2</span><span class="p">]</span> <span class="c1">//</span>
+<span class="n">macro</span> <span class="n">div</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="p">(</span> <span class="n">dx</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">+</span><span class="n">dy</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="p">)</span> <span class="c1">//</span>
+
+<span class="c1">// Problem</span>
+<span class="n">real</span> <span class="n">mu</span><span class="o">=</span> <span class="n">E</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">));</span>
+<span class="n">real</span> <span class="n">lambda</span> <span class="o">=</span> <span class="n">E</span><span class="o">*</span><span class="n">nu</span><span class="o">/</span><span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">nu</span><span class="p">));</span>
+<span class="n">real</span> <span class="n">T</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="n">real</span> <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="n">real</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="n">T</span><span class="p">;</span> <span class="n">t</span><span class="o">+=</span><span class="n">dt</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">solve</span> <span class="n">lame</span><span class="p">([</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">uu</span><span class="p">,</span> <span class="n">vv</span><span class="p">])</span>
+ <span class="o">=</span> <span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span> <span class="n">lambda</span> <span class="o">*</span> <span class="n">div</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">*</span> <span class="n">div</span><span class="p">(</span><span class="n">uu</span><span class="p">,</span> <span class="n">vv</span><span class="p">)</span> 
+	<span class="o">+</span> <span class="mf">2.</span><span class="o">*</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">epsilon</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span><span class="err">'</span> <span class="o">*</span> <span class="n">epsilon</span><span class="p">(</span><span class="n">uu</span><span class="p">,</span><span class="n">vv</span><span class="p">))</span> <span class="p">)</span> <span class="o">-</span> 
+	<span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span> <span class="n">f</span><span class="o">*</span><span class="n">vv</span> <span class="p">)</span>
+ <span class="o">+</span> <span class="n">on</span><span class="p">(</span><span class="n">C2</span><span class="p">,</span> <span class="n">C4</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">count</span> <span class="o">++</span><span class="p">;</span>
+<span class="c1">// Plot</span>
+ <span class="n">real</span> <span class="n">coef</span><span class="o">=</span> <span class="mf">0.7</span><span class="p">;</span>
+ <span class="c1">// Move mesh</span>
+<span class="n">Th</span> <span class="o">=</span> <span class="n">movemesh</span><span class="p">(</span><span class="n">Th</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="n">u</span><span class="o">*</span><span class="n">coef</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">v</span><span class="o">*</span><span class="n">coef</span><span class="p">]);</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">Th</span><span class="p">,</span> <span class="n">ps</span><span class="o">=</span><span class="s">"./elastic simulation/sol_"</span><span class="o">+</span><span class="n">count</span><span class="o">+</span><span class="s">".jpg"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-0" src="/assets/img/elastic-simulation.gif" />
+    </div>                                                                       
+</div>
+<div class="caption">                                                            
+Elastic simulation result
+</div>]]></content><author><name>Tu Anh-Nguyen</name></author><summary type="html"><![CDATA[Analyzing a simple system of elastic equations]]></summary></entry><entry><title type="html">Heat Simulation with FreeFEM</title><link href="https://tu-na.org/blog/2020/heat-simulator/" rel="alternate" type="text/html" title="Heat Simulation with FreeFEM" /><published>2020-01-14T00:00:00+09:00</published><updated>2020-01-14T00:00:00+09:00</updated><id>https://tu-na.org/blog/2020/heat-simulator</id><content type="html" xml:base="https://tu-na.org/blog/2020/heat-simulator/"><![CDATA[<h2 id="the-problem">The Problem</h2>
+<p>This series of blog will focus on how to simulate physical phenomena using finite element method. In the series, I will try not to mention too much about the well-defineness of these problems or the convergence rate of the algorithms. Instead, this blogs aim to give a simple construction and explanation of weak problem for some famous PDE equations.</p>
+
+<p>The first blog in this series start with the heat equation. In the most general form, the heat equation can be written as follow:
+\(\begin{align}
+\frac{\partial u}{\partial t} - \alpha \Delta &amp;= f(X, t) \tag{1} \\
+u(X, 0) &amp;= u_0(X)_{| \Omega} \tag{2} \\
+u(X, t) &amp;= u_r(X, t)_{| \Gamma_1} \tag{3} \\
+\frac{\partial u}{\partial n} (X, t) &amp;= u_n(X, t)_{| \Gamma_2} \tag{4}
+\end{align}\)</p>
+
+<p>Function $u$ represents the heat value for each point in space domain $\Omega$ (2 or 3 dimensions), where $X = [x, y]$ is a point in two-dimensional space (or $X = [x, y, z]$ in three-dimensional space), and $t$ is time variable. Equation (2) is called initial condition, (3) is Dirichlet boundary condition, and (4) is Neumann boundary condition. In this notation, $\Gamma_1$ and $\Gamma_2$ is part of the boundary $\partial \Omega$ satisfying $\Gamma_1 \cup \Gamma_2 = \partial \Omega$. And, $\Delta u$ is the Laplacian operator and is defined as:
+\(\Delta u = \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}\)
+The Laplacian operator at point $X_0 = (x_0, y_0)$ can be interpreted as the average different between the value of $u$ at $X_0$ and the value of its neighbors. In heat diffusion context, we know that heat will move form hotter to colder places, which explain for the left hand side of (1) , where $\alpha$ be diffusivity coefficient (the higher value of $\alpha$, the more resistant to heat of the medium). The right hand side of (1) is the external power (wattage) given to each point in domain $\Omega$ overtime. In case $f = 0$, the heat is allowed to move freely with respect to three constraint (2), (3) and (4). In mathematical context, these condition is required for the uniqueness of $u$. However, each condition has its own physical meaning. Suppose we want to simulate how heat move if we put two $80^o C$conductors in a $20^o C$ room. Initially, every point in the room, except in the conductor, has value of $20^o C$, and we model the initial condition as $u(X, 0) = 20$ on the region not belonging to the conductors’. If we want to keep the heat of the conductor at a constant $80^o C$, then this mean we do not care about the internal point of them and set $u_r(X, t) =  80^o C$ on boundary of two conductors. Finally Neumann condition represent how much external heat is put through the boundary of $\Omega$,  for example if $u_n(X, t)$ is set to be zero on the boundary of the room, then it means there is no heat coming in or coming out of the room. The 2-D simulation of this phenomenon is conducted in the final section of this blog</p>
+
+<h3 id="how-to-construct-weak-solution-">How to construct weak solution ?</h3>
+
+<p>Numerical solution of heat equations relies on two schemes: discrete time scheme and finite elements method.  The idea is fairly simple, we first divide the time horizon $[0, T]$ into small parts, each parts has the size $\delta t$ ($t_i = i * \delta t$) and approximate $\frac{\partial u}{\partial t} = \frac{u^n(X) - u^{(n - 1)}(X)}{\delta t}$ (here, we denote $u^n(X) =  u(X, t = t_n)$ ), and then try to solve $u^n$ at each time step given we know the previous step $u^{n-1}. To do this, we use finite element methods to solve the following (Backward Euler):</p>
+
+\[\begin{align}
+ \frac{u^n(X) - u^{(n - 1)}(X)}{\delta t} - \Delta u^n &amp; = f^n \tag{*} \\
+ u^0(X) &amp; = u_0 \\
+ u(X, t)_{| \Gamma_1} &amp; = 0 \\
+\frac{\partial u}{\partial n} (X, t)_{| \Gamma_2} &amp;= u_n(X, t)
+\end{align}\]
+
+<p>The main idea of finite element methods is to partition the domain $\Omega$ into triangles (each triangle is called an element),  each triangle will have a corresponding basis function (commonly linear function). The function $u^n$ will be the linear combination of these basis functions.  When we have the mesh (partition of the domain), and choose a function space to approximate $u$, the only work left is to find the coefficient for each basis functions. Finding these coefficient, in fact, is equivalent to solve system of linear equation. And this equation comes from the construction of weak problem. Let test function $v$ be a function whose value on $\Gamma_1$ equals 0.
+\(\begin{align}
+\int_{\Omega}\left(\frac{u^n(X) - u^{(n - 1)}(X)}{\delta t}v \right) - \int_\Omega \Delta u^n v &amp; = \int_\Omega f^n v \\
+\int_\Omega \frac{u^n v}{\delta t} + \int_\Omega \nabla u^n \nabla v &amp; = \int_\Omega \frac{u^{n-1} v}{\delta t} + \int_\Omega fv + \int_{\partial \Omega} \frac{\partial u^n}{\partial n} v \\
+\int_\Omega \frac{u^n v}{\delta t} + \int_\Omega \nabla u^n \nabla v - \int_{\Gamma_2} u_n(X, t_n)v &amp; = \int_\Omega \frac{u^{n-1} v}{\delta t} + \int_\Omega fv \tag{5} \\
+\end{align}\)
+The equation (5) can be shorten as $a(u, v) = L(v)$ where $a$ is bilinear operator, and $L$ is linear operator. The heat equation new asks for $u$ satisfy (5) with every $v$ in the chosen function space. The problem has unique solutions according to Lax-Milgram Theorem.</p>
+
+<p>And that’s basically everything we need to use freefem++ to model the heat flow ! I will cover a little more about finite element method in the subsequent blogs. For now, we will turn to simulate the phenomenon described earlier.</p>
+
+<h3 id="numerical-solution">Numerical solution</h3>
+
+<p>The last time I implemented FEM for heat equation by python, and Stokes equations by Matlab was horrible experiences.  The most annoying parts are mesh triangulation and calculating values on stiffness and load matrix to satisfy all boundary conditions. However, I found everything is so simple with Freefem. Basically, there’s only two step, ‘’ draw “ the domain and rewrite the weak problem. The following code is the simulation of physical phenomena described in the introduction. There’s a minor change is that I put a wall divided the room into two half, and this wall have diffusivity constant 3 times greater than that of air.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">border</span> <span class="nf">C1</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">){</span><span class="n">x</span><span class="o">=-</span><span class="mi">5</span><span class="o">+</span><span class="n">t</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="mi">4</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">100</span><span class="p">;}</span>
+<span class="n">border</span> <span class="nf">C2</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">){</span><span class="n">x</span><span class="o">=-</span><span class="mi">4</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="mi">4</span><span class="o">-</span><span class="n">t</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">100</span><span class="p">;}</span>
+<span class="n">border</span> <span class="nf">C3</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">){</span><span class="n">x</span><span class="o">=-</span><span class="mi">4</span><span class="o">-</span><span class="n">t</span><span class="p">;</span><span class="n">y</span><span class="o">=-</span><span class="mi">4</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">100</span><span class="p">;}</span>
+<span class="n">border</span> <span class="nf">C4</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">){</span><span class="n">x</span><span class="o">=-</span><span class="mi">5</span><span class="p">;</span><span class="n">y</span><span class="o">=-</span><span class="mi">4</span><span class="o">+</span><span class="n">t</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">100</span><span class="p">;}</span>
+
+<span class="n">border</span> <span class="nf">C5</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="o">+</span><span class="n">t</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="mi">4</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">101</span><span class="p">;}</span>
+<span class="n">border</span> <span class="nf">C6</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="mi">6</span><span class="p">;</span><span class="n">y</span><span class="o">=</span><span class="mi">4</span><span class="o">-</span><span class="n">t</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">101</span><span class="p">;}</span>
+<span class="n">border</span> <span class="nf">C7</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="mi">6</span><span class="o">-</span><span class="n">t</span><span class="p">;</span><span class="n">y</span><span class="o">=-</span><span class="mi">4</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">101</span><span class="p">;}</span>
+<span class="n">border</span> <span class="nf">C8</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">;</span><span class="n">y</span><span class="o">=-</span><span class="mi">4</span><span class="o">+</span><span class="n">t</span><span class="p">;</span><span class="n">label</span><span class="o">=</span><span class="mi">101</span><span class="p">;}</span>
+
+<span class="n">border</span> <span class="nf">C9</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">){</span><span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">);</span><span class="n">y</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">);</span><span class="n">label</span><span class="o">=</span><span class="mi">102</span><span class="p">;}</span>
+<span class="n">real</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">mesh</span> <span class="n">Th</span> <span class="o">=</span> <span class="n">buildmesh</span><span class="p">(</span><span class="n">C1</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C2</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C3</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C4</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C5</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> 
+<span class="n">C6</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C7</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C8</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">C9</span><span class="p">(</span><span class="n">n</span><span class="p">));</span>
+<span class="n">fespace</span> <span class="nf">Vh</span><span class="p">(</span><span class="n">Th</span><span class="p">,</span><span class="n">P1</span><span class="p">);</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">Th</span><span class="p">);</span>
+
+<span class="n">func</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">&lt;=</span><span class="mf">0.25</span> <span class="o">&amp;&amp;</span> <span class="n">x</span><span class="o">&gt;=-</span><span class="mf">0.25</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">Vh</span> <span class="n">kappa</span> <span class="o">=</span> <span class="n">k</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">u0</span><span class="p">;</span>
+
+<span class="n">u0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">real</span> <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">;</span>
+<span class="n">real</span> <span class="n">T</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">t</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="n">T</span><span class="o">/</span><span class="n">dt</span><span class="p">;</span> <span class="n">t</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">solve</span> <span class="n">heat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span><span class="n">u</span><span class="o">*</span><span class="n">v</span> <span class="o">+</span> <span class="n">dx</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">*</span><span class="n">dt</span><span class="o">*</span><span class="n">kappa</span> <span class="o">+</span> <span class="n">dy</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">*</span><span class="n">dy</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">*</span><span class="n">dt</span><span class="o">*</span><span class="n">kappa</span><span class="p">)</span>
+
+	<span class="o">-</span> <span class="n">int2d</span><span class="p">(</span><span class="n">Th</span><span class="p">)(</span><span class="n">u0</span><span class="o">*</span><span class="n">v</span><span class="p">)</span>
+	<span class="o">+</span> <span class="n">on</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="n">u</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span> <span class="o">+</span> <span class="n">on</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="n">u</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span> <span class="o">+</span> <span class="n">on</span><span class="p">(</span><span class="mi">102</span><span class="p">,</span><span class="n">u</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+	<span class="n">u0</span> <span class="o">=</span> <span class="n">u</span><span class="p">;</span>
+	<span class="n">count</span> <span class="o">++</span><span class="p">;</span>
+	<span class="n">plot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ps</span><span class="o">=</span><span class="s">"./heat simulation/sol_"</span><span class="o">+</span><span class="n">count</span><span class="o">+</span><span class="s">".jpg"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-0" src="/assets/img/heat-simulation.gif" />
+    </div>                                                                       
+</div>
+<div class="caption">                                                            
+    Heat Simulation
+</div>]]></content><author><name>Tu Anh-Nguyen</name></author><summary type="html"><![CDATA[Analyzing a simple heat simulation problem]]></summary></entry><entry><title type="html">Polynomial Algorithm for Minimum Dominating Set in Some Family of Graphs</title><link href="https://tu-na.org/blog/2019/dominating-set/" rel="alternate" type="text/html" title="Polynomial Algorithm for Minimum Dominating Set in Some Family of Graphs" /><published>2019-05-31T00:00:00+09:00</published><updated>2019-05-31T00:00:00+09:00</updated><id>https://tu-na.org/blog/2019/dominating-set</id><content type="html" xml:base="https://tu-na.org/blog/2019/dominating-set/"><![CDATA[<h2 id="the-problem">The Problem</h2>
+<p>A dominating set of a graph $G = (V(G),E(G))$ is a set $D \subset V$ of vertices such that every other vertices not in $D$ has at least a neighbor in it. Concretely, the dominating set $D$ of graph $G$ is defined as $D := {v \in V(G) \ | \ \forall u \in V(G) \setminus D, \ \exists v \in D \ \text{such that} \ v \in N(u) }$, where $N(u) := {v \in V(G) \text{ such that } (u,v) \in E(G)}$. The minimum dominating set problem asks for such a set with minimum cardinality. This problem is first stated by C.F. De Jaenisch in 1862 when he tried to find the minimum number of queens to dominate a 8x8 chessboard. Modeling the queens-problem into graph is fairly simple: each square represents a node, and two nodes have a link if a queen can travel between them in a move. From this, it is straightforward to see that minimum number of queens to cover all the chessboard will be the smallest number of vertices to dominate the entire graph. 
+However, dominating set appears in many applications than just an interesting puzzle, such as online social networking or communication network. Each application requires a variation of dominating set. For example, Positive Influences Dominating Set (PIDS) is proposed for problem in social theory, while Connected Dominating Set (CDS) can serve as backbone for many communication networks.</p>
+
+<p>Most algorithm used in applications can only return a good approximation of the minimum dominating set (MDS). At the moment, we cannot hope for an efficient algorithm since MDS problem is NP-hard. In fact, the best known algorithm has exponential time complexity $O(1.4969^n)$, achieved by using a measure and conquer approach.</p>
+
+<p>Studying how to arrive at a good approximation and where the number $1.4969$ comes from are interesting. I hope to cover these topics in the future. But in this post, I want to tackle a different question related to MDS problem: On what case the MDS problem can be solved in polynomial time? This question, is, of course, not without basis. It based on a huge amount of work on the independent set. In literature, finding maximum independent set (MIS) problem is proved to have efficient algorithm (polynomial time) in many families of graph using a technique named augmenting set. Since dominating and independent set are closely related, a simple idea is to inherit the augmenting method for MDS problem. Because the general idea is we want to find a subgraph that can reduce the number of vertices in the dominating set after each iterative step, I named it reducing set.</p>
+
+<p>This newly developed technique can be applied to solve two open problems: MDS in $(fork, \overline{P_5})$-free and $(claw, P_5)$-free graph. For references, visit <a href="http://www.graphclasses.org/classes/problem_Domination.html">here</a>. Let $F$ be a set of graph, a graph $G$ is called $F$-free if $G$ do not have any induced subgraph contained in $F$. The rest of this blog, I will try to describe the general idea of how to solve these two problem and avoid going through too much proof. Extensive readers can access to my <a href="/assets/pdf/Polynomial_Algorithm_for_Minimum_Dominating_Set.pdf">paper</a> for more details.</p>
+
+<div class="row mt-3">                                                           
+    <div class="col-sm mt-3 mt-md-0">                                            
+        <img class="img-fluid rounded z-depth-0" src="/assets/img/graphs.png" />
+    </div>
+</div>
+<div class="caption">
+</div>
+
+<h3 id="fork-overlinep_5-free-graphs">$(fork, \overline{P_5})$-free Graphs</h3>
+<p>In this section, for convinient, every graphs are $(fork, \overline{P_5})$-free. My first idea for this problem is we first start with an minimal dominating set. This set will contains many maximal connected components. If this set is not minimum, then of course, exists other sets with smaller cardinality. My intuition is we can replace components of the current DS by other components to obtain smaller one. Thinking in this direction, I want to know the characteristic of a components in a minimal dominating set.</p>
+
+<p>The following lemma is stated on connected dominating set. Since after a long process of refining my proof, I realize I am longer need the reducing set concept for this class of graphs, but rather a decomposition scheme for this problem. In fact, I had a proof using  reducing set, but when I found a shorter proof, it seemed redundant so I obmited it. However, the idea for reducing set is much clearer in the next section.</p>
+
+<p><strong>Lemma 1.</strong> The minimal connected dominating set of a $(fork, \overline{P_5})$ - free graph can only be path, cycle or clique.</p>
+
+<p>The main result is to prove the minimum CDS only have a limited vertices besides some special cases. As I mentioned, how I derived from reducing set idea to this idea is a long process. But mainly I popped up with idea since I found it very hard to construct a graph that has minimum dominating set with more than 8 vertices.</p>
+
+<p>After we come up with that lemma, the rest of the work only contains of ‘‘rigorous proof”. We have two cases to deal with: the first one is dominating cliquqe, and the second one is dominating path or cycle.</p>
+
+<p>To find minimum dominating clique, we consider each vertex and search for the minimum dominating clique contains that vertex. Let $v \in V(G)$, if $C = v \cup N(v)$ is not a dominating set then we can conclude that $v$ does not belong to any dominating clique and continue our search to another vertex. If $C$ is dominating set of $G$, then we sequentially remove vertex of $C$ until we obtain a minimal dominating containing $v$ in $C$. The following lemma show that we can find the minimum dominating set containing $v$ in polynomial time.</p>
+
+<p><strong>Lemma 2.</strong> IF $C = v\cup N(v)$ is a dominating set, $M \subset  C$ such that $M$ is minimal dominating set containing $v$, then $M$ is minimum dominating set contain $v$</p>
+
+<p>To deal with the second case, we try to decompose the graph into smaller ones, until it becomes $P_8$-free. Concretely, I utilize the following theorem on graph without fork proved by Alekseev</p>
+
+<p><strong>Theorem 1.</strong> If $G$ is $fork$-free, contains both $claw$ and $P_6$ as induced subgraph, then there exists a polynomial algorithm that partition $V(G)$ into 3 subsets $A, B$ and $C$ which satisfies all of the following:</p>
+<ul>
+  <li>$G(B)$ contains $P_6$ as induced subgraph</li>
+  <li>Any vertices in A is connected to every vertices in B</li>
+  <li>There is no edge which has endpoints in $B$ and $C$</li>
+</ul>
+
+<p>And one final important lemma to complete this section</p>
+
+<p><strong>Lemma 3.</strong> Minimum connected dominating set of $G[A \cup C]$ is also minimum connected dominating set of $G$</p>
+
+<h3 id="claw-p_5-free-graph">$(claw, P_5)$-free Graph</h3>
+
+<p>In this section, we will introduce the concept of reducing set to point out that minimum dominating set can be found in polynomial time in $(claw, P_5)$-free class. For brevity, every graph mentioned in this section is $(claw, P_5)$-free.
+We can easily prove the following lemma by using the same idea from Lemma 1.</p>
+
+<p><strong>Lemma 3.</strong>
+Every connected component of minimal dominating set is clique</p>
+
+<p>Let $D_1$ be the minimal dominating set of $G$. Denote $C^1_1$ , $C^1_2$ , … , $C^1_{d_1}$ be connected components of $D_1$ (here, we suppose that $D_1$ has more than 1 components i.e $d_1 &gt; 1$). If $D_1$ is not minimum, there must exist another dominating set $D_2$ has smaller cardinality $|D_2|&lt;|D_1|$. We also denote $C^1_1$ , $C^1_2$ , … , $C^1_{d_2}$ be connected components of $D_2$.
+We will say two components $C^1_i$ and $C^2_j$ adjacent if $\exists \ v_1 \in C^1_i$ and $C^2_j$ such that $v_1$ coincides $v_2$ or $v_1$ is adjacent to $v_2$. By definition of connected components, it is easily seen that two different components of the same dominating set are not adjacent. Therefore, we only say adjacent components when one component belongs to a dominating set, and the other one belongs to another dominating set.
+Let $R = G[D_1 \cup D_2]$, and denote $R_1, R_2, …, R_k$ be connected components fo $G$. Since $|D_2| &lt; |D_1|$, there must exists $R_i$ where the number of vertices belonging to $D_1$ less that that of which in $D_1$. We call such components is reducing set, and show that if from $D_1$ we replace $D_1 \cap R_i$ by $D_2 \cap R_i$, we will obtain smaller dominating set.</p>
+
+<p><strong>Lemma 4.</strong>
+Let $D$ be a minimal dominating set of $G$, $a, b \in D$ be two adjacent vertices. Replacing ${u, v}$ by ${u, b}$ or (${v, a}$) obtains another dominating set $D’$ with the same cardinality as $D$</p>
+
+<p><em>Proof</em>. We only need to prove $D \cup u \setminus a$ a dominating set. 
+Let $x \in N(u)$ and $x \notin {a, v}$. There must be a vertex $x$ in neighbor of $u$ and different form $a$ and $v$ because if $N(u) = {a, v}$ then replacing ${u, v}$ by ${v, a}$, we obtain $D’$ with satified properties. 
+If $\forall x \in N(u)$, $x \notin {a, v}$, $x$ is adjacent to $v$, then replacing ${u, v}$ by ${v, a}$ also creates dominating set $D’$ such that $|D’| =|D|$<br />
+If $\exists x \in N(u)$, $x \notin {a, v}$, $x$ is not adjacent to $v$, then $x$ must be adjacent to $a$ otherwise ${u, a, x, v}$ induces a claw. In this case replacing ${u, v}$ by ${v, a}$ also creates dominating set $D’$ 
+Similar argument can be made for ${u, b}$ 
+We will point out that, every minimal dominating set in this class has a independent dominating set with less or equal cardinality. Inspired by augmenting technique, to deal with finding minimum dominating set, we will start with a minimal dominating set $D_1$, and keep reducing the number of vertices in $D_1$ until we are longer able to. Suppose $D_1$ has a component with more than 1 node, denote $u, v \in D_1$ then by lemma 6, we can replace $u, v$ by $u, b$ or $v, a$ without increasing number of node and keep the dominating properties. This replacement step always creates a connected component with single vertex, since $a \in N^r_D(u)$ (or $b \in N^r_D(v)$). However, above argument can only be true if there is no components in $D_1$ which contains only a single vertex $v$ and all of its neighbor is adjacent to other vertex in $D_1$. In this case, we can replace $v$ by one of its neighbor. If the dominating obtained after the replacement step has a non-clique connected component then it is not minimal, we can continue to remove vertices in $D_1$ to obtain smaller one. We now assume that every connected components of $D_1$ has more than 2 vertices. Let $C^1_i$ is a components of $D_1$ and $C^1_i$ = $x^i_1$ , $x^i_2$ , … , $x^i_{k_i}$ ($k_i$ &lt; 2). In the replacement step, we replace $C^1_i$ by ${x^i_1, y^i_2, …, y^i_k }$ where $y^i_j \in N^r_D(x_j)$ $\forall \ j \in {2, 3, …, k_i }$</p>
+
+<p><strong>Lemma 5.</strong>
+After perform series of replacement steps, we obtain a dominating independent set</p>
+
+<p>This lemma tells us that, for every minimal dominating set in $G$ there exist an independent set with equal or smaller size. Hence, to find minimum dominating set, we focus on finding minimum independent dominating set. Let $D_1$ = $x^1_1$ , $x^1_2$ , … , $x^1_{k_1}$ and $D_2$ = $x^2_1$ , $x^2_2$ , …, $x^2_{k_2}$ be two minimal independent dominating set and $R = G[D_1 \cup D_2]$. Since $D_1$ and $D_2$ are independent, no vertices within the two set is adjacent to each other. Furthermore $\Delta(R) \leq 2$, since if $v \in R$ and $d(v) \leq 3$, suppose $v \in D_1$, then $N_R(v) \subset D_2$, therefore $v$ combined with its neighbors in $R$ create a claw. This means that every connected component of $R$ can only be path or cycle. Moreover, $G$ is $P_5$-free, every components of $R$ cannot have more than 5 vertices.</p>
+
+<p><strong>Lemma 6.</strong>
+If $C$ is a connected component of $R$, denote $C = C_1 \cup C_2$ where $C_1$ and $C_2$ are respectively connected components of $D_1$ and $D_2$, then $D_1 \setminus C_1 \cup C_2$ is a dominating set.
+<em>Proof.</em> Since $C$ is a connected component with more than 2 vertices, suppose $x_1$ and $x_2$ belongs to $C$ and adjacent to each other, where $x_1 \in C_1$ and $x_2 \in C_2$. Without loss of generality, assume contradictory that $\exists x \in G \setminus N[D_1 \setminus C]$ such that $x$ is adjacent to $x_1$ but not $x_2$. However, since $D_2$ is also dominating set, there must exist $y_2$ does not belong to $C$ and has $x$ as its neighbor. Since $D_1$ is also a dominating set, and by maximality of $C$, there must be a vertex $y_1 \in D_1$ but not in $C$ such that $y_1$ is adjacent to $y_2$ but not $x$. In this case $x_2, x_1, x, y_2, y_1$ induces $P_5$.</p>
+
+<p>We are now able to state the main theorem in this section.</p>
+
+<p><strong>Theorem 2.</strong> Minimum doninating set in $(claw, P_5)$-free graph can be found in polynomial time.</p>
+
+<p><em>Proof.</em> From Lemma 9, we know that, in  $(claw, P_5)$-free graph, there exists an independent dominating has the minimum cardinality. We begin our algorithm by finding a minimal independent dominating set. By lemma 10, we have that a connected component of the union of two minimal dominating set can serve as reducing set. Moreover, sine $G$ is $claw$-free, the bipartite graph can only be path or cycle. $P_5$-free property make the connected components cannot have more than 5 vertices. Therefore, we can enumerate all path with length three and all cycles with length five. If no path or cycles founded can reduce the number of the current dominating set, we conclude that the minimum dominating set is found. Since after each step, the number of vertices decrease at least one, so after at most $n$ step, an minimum dominating set is found.</p>]]></content><author><name>Tu Anh-Nguyen</name></author><summary type="html"><![CDATA[This post present proof and techniques for finding minimum dominating set in some families of graphs.]]></summary></entry><entry><title type="html">Solving a Probabilistic Problem</title><link href="https://tu-na.org/blog/2018/probabilistic-game/" rel="alternate" type="text/html" title="Solving a Probabilistic Problem" /><published>2018-01-29T00:00:00+09:00</published><updated>2018-01-29T00:00:00+09:00</updated><id>https://tu-na.org/blog/2018/probabilistic-game</id><content type="html" xml:base="https://tu-na.org/blog/2018/probabilistic-game/"><![CDATA[<h2 id="the-problem">The Problem</h2>
+
+<p>Suppose there are two players A and B. A owns $a$ dollars, while B owns $b$ dollars ($a, b \in \mathbb{N}$). Each turn of play, A has $p$ chance of winning and $q = 1-p$ chance of losing. if A win, he gets a dollar; if he loses, he lose one dollar. The game end when either of players is out of money. The question is what probability A will win (A gets $a+b$ dollar) or A will lose (A has 0 dollars).</p>
+
+<h2 id="the-model">The Model</h2>
+
+<p>This problem can be easily put into a mathematical model as follows. Let ${X_n}%_$ be a random variable sequence such that $X_i$ is the money that A owns at $i^{th}$ turn of the game. We can easily obtain the transition matrix $P$:</p>
+
+\[\begin{bmatrix} 
+1 &amp; 0 &amp; 0 &amp; \dots &amp; 0 \\ 
+q &amp; 0 &amp; p &amp; \dots &amp; 0 \\
+0 &amp; q &amp; 0 &amp; \dots &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; 0 &amp; \dots &amp; 1 
+\end{bmatrix}\]
+
+<p>$X_i$ can be a element of the set $I = $ {$1,2,3,.., a+b$} and $p_{ij}$ is the probability that state $X_i$ will go to state $X_j$.</p>
+
+<h2 id="the-notation">The Notation</h2>
+<p>We only need to find the probability that starting $a$ dollars, A will end up at having $a+b$ dollars after some turn (the other case is similiar). Let H equal inf {$n \geq 0 | X_n = a+b$}, this definition also means that $H$ is a random variable .Let define $h_i$ as follow $ h_i = P(H &lt; \infty | X_0 = iv) $</p>
+
+<h2 id="the-theorem">The Theorem</h2>
+<p>The set of $h_i$ with $i = \overline{1,a+b}$ is the non-negative smallest solution of the following system</p>
+
+\[\left\{
+\begin{array}{l}
+h_i = 1 \ \ \ \ \ \ \ \ \ \ \ \ \ \ when \ i = a+b \\
+h_i = \sum_{j \in I} p_{ij} h_j \ when \ i \neq a+b
+\end{array}
+\right.
+\ \ \ \ \ \ \ (\ast)\]
+
+<p>The smallest solution here means that if $x$ is also non-negetive solution of the system $*$ then $x_i \geq h_i \forall i \in I$</p>
+
+<h3 id="proof">Proof</h3>
+<p>We first prove that $h = (h_i)_{i \in I}$ is a solution of *.
+If $i = a+b$ then</p>
+
+\[h_i = P(H &lt; \infty | X_0 = a+b) = P(0 &lt; \infty | x_0 = a+b) = 1\]
+
+<p>If $i \neq a+b$ then</p>
+
+\[h_i = P(H &lt; \infty | X_0 = i) = \sum_{j \in I} P(H &lt; \infty | X_1 = j) \cdot P(X_i = j | X_0 = i)\]
+
+<p>Since \(P(H &lt; \infty \mid X_1 = j) = P(H &lt; \infty \mid X_0 = j) = h_j\). We conclude that</p>
+
+\[h_i = \sum_{j \in I} p_{ij} h_j\]
+
+<p>To this point, we have proven that \(h = (h_i)_{i \in I}\) is a solution of system $\ast$. Now we will prove that $h$ is the smallest solution of $\ast$. Suppose \(x = (x_i)_{i \in I}\) is a non-negative solution of $\ast$. Clearly, $x_{a+b} = 1$. With $i \neq a+b$, we have</p>
+
+\[\begin{align*}
+x_i &amp;= \sum_{j \in I} p_{ij}x_j =  p_{i, a+b} + \sum_{j \neq a+b} p_{ij}x_j \\
+&amp;= p_{i, a+b} + \sum_{j \neq a+b} p_{ij} (p_{j, a+b} + \sum_{r \neq a+b } p_{jr}x_r) \\
+&amp;= P_i(X_1 = a+b) + P(X_1 \neq a+b, X_2 = a+b) + \sum_{j \neq a+b} \sum_{r \neq a+b} p_{ij}p_{jr}x_r
+\end{align*}\]
+
+<p>If we continue to expand $x_r$ as above, we can derive that</p>
+
+\[\begin{align*}
+P_i(X_1 = a+b) + ... + P_i(X_1 \neq a+b, X_2 \neq a+b, ... X_n = a+b) \\ + \sum_{j_1 \neq a+b} ... \sum_{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn} \\
+= P_i(H \le n) + \sum_{j_1 \neq a+b} ... \sum{j_n \neq a+b} p_{ij_1}p{j_1j_2}...p_{j_{n-1}j_{n}}x_{jn}
+\end{align*}\]
+
+<p>The “bunch of sum” in the above formula is used for nothing but it is greater than $0$. \(x_i &gt; P_i(H \le n) \forall n\). So \(x_i \geq h_i \forall i \in I\).</p>
+
+<p>In conclusion, $h$ is is the non-negative smallest solution of the system *</p>
+
+<h3 id="the-formula">The Formula</h3>
+
+<p>Back to our original problem, to calculate the chance of A wins starting from $a$ dollars is to find $h_a$ in the above system. By the above theorem, we need to solve the following system</p>
+
+\[\left\{
+\begin{array}{l}
+h_0 = 0 \\
+h_{a+b} = 1 \\
+h_i = q h_{i-1} + p h_{i + 1} \forall i = \overline{1, a+b-1}
+\end{array}
+\right.\]
+
+<p>we rewrite our recursive formula as $h_{i+1} = \frac{1}{p} h_i - \frac{q}{p} h_{i+1}$. From this we can derive our characteristic polynomial</p>
+
+\[x^2 - \frac{1}{p} x + \frac{q}{p}\]
+
+<p>We have two solution of the characteristic polynomial is</p>
+
+\[x_{1,2} = \frac{\frac{1}{p} \pm \sqrt{\frac{1}{p^2} - 4\frac{q}{p}}}{2} = \frac{\frac{1}{p} \pm \sqrt{\frac{1}{p^2} - 4\frac{1}{p} + 4}}{2} = \frac{\frac{1}{p} \pm \left\lvert\frac{1}{p}-2\right\lvert}{2}\]
+
+<p>In this problems, $p = 0$ or $1$ is trivial since if so, A will always lose or win at every turn. Therefore we will only consider $p, q \neq 0, 1$.</p>
+
+<p>If $p \neq q \neq \frac{1}{2}$ then the above characteristic polynomial has exactly two distinct solution. However we need not to consider which one of {$p, q$} is greater than $\frac{1}{2}$ because in both case, the polynomial has two solution $1$ and $\frac{q}{p}$. Our general formula will have the form</p>
+
+\[h_n = c_1 (\frac{q}{p})^n + c_2\]
+
+<p>where $C_1$ and $c_2$ is two real constant satifying the initial conditions</p>
+
+\[\left\{
+\begin{array}{l}
+h_0 = c_1 + c_2 = 0 \\
+h_{a+b} = c_1 (\frac{q}{p})^{a+b} + c_2 = 1 \\
+\end{array}
+\right.\]
+
+<p>Solving this equation, we easily obtain that $c_1 = \frac{-1}{1-(\frac{q}{p})^{a+b}}$ and $c_2 = \frac{1}{1-(\frac{q}{p})^{a+b}}$. Substitute $c_1$ and $c_2$ in our general formula</p>
+
+\[h_n = \frac{1 - (\frac{q}{p})^n}{1-(\frac{q}{p})^{a+b}}\]
+
+<p>This means that, the chance of winning for A will be $h_a = \frac{1 - (\frac{q}{p})^a}{1-(\frac{q}{p})^{a+b}}$</p>
+
+<p>Finally, in case $p = q = \frac{1}{2}$, $h_a = \frac{a}{a+b}$</p>
+
+<h3 id="example">Example</h3>
+<p>Let consider a actual games where both A and B has 500 dollars. If both A and B has equally 50-50 chance of gaining money each turn, then from the above formula they have 50% chance of winning the whole game. However, if we just slightly favor A, giving him 0.502 chance of winning each turn, then surprisingly A will have approximately 99% of winning the whole game.</p>
+
+<p>Despite the high winning chance, a simple simulation of the game shows that it takes A millions of steps to win the whole game. Now, we may ask what the expected number of step of the game. In fact, we can easily construct a system that solves the expection of number of step similiar to system that solves the probability. Let $k_a = E(H \mid X_0 = a)$ then</p>
+
+\[\left\{
+\begin{array}{l}
+k_{a+b} = 0 \\
+k_i = 1 + \sum{j \neq a+b} p_{ij} k_j \ when \ i \neq {a+b}
+\end{array}
+\right.\]
+
+<p>Last words, this problem can be generalized into the problem <a href="https://en.wikipedia.org/wiki/Markov_chain">Markov Chain</a> reaching its <a href="https://en.wikipedia.org/wiki/Absorbing_Markov_chain">Absorbing State</a>.</p>]]></content><author><name>Tu Anh-Nguyen</name></author><summary type="html"><![CDATA[This article presents the algebraic proof and method for solving a two-players problem.]]></summary></entry></feed>
